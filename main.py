@@ -2,15 +2,26 @@ from parser import Parser
 from token import *
 from expressionevaluator import ExpressionEvaluator
 from os import name, system
+import sys 
 
 def main():
     # get single line and then tokenize repeatedly > repl
-
     cprint('Flux v0.0.1', 'green')
     showtree = True
+    
+    try:
+        flag = sys.argv[1]
+        flag = True if flag == '-c' else False
+        nline = False
+    except IndexError:
+        flag = False
+
     while True:
-        # init lexer
-        line = input("=> ")
+        # this helps with my CI testing
+        # if there is a cmdline arg, exit after running the single line snippet, else
+        # run like normal
+        line = input("=> ") if not flag else sys.argv[2]
+        line = nline if nline else line
 
         # user requested exit 
         if line == '.q':
@@ -48,6 +59,10 @@ def main():
 
         if showtree:
             prettyprint(tree.root)
+        
+        if flag:
+            nline = '.q'
+
 
 # prints the Syntax tree with a nice tree syntax
 def prettyprint(node, indent='', is_last=True):
