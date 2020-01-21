@@ -1,4 +1,4 @@
-from token import * # contains Token, TokenType
+from tokens import * # contains Token, TokenType
 from helper import Helper
 class Lexer:
     def __init__(self, input):

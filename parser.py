@@ -29,7 +29,7 @@ class Parser:
                 break
             token = lexer.lex()
         if self.error:
-            self.diagnostics += lex.diagnostics
+            self.diagnostics += lexer.diagnostics
             return
         elif token.token_t.name == 'eof': self.tokens.append(token)
 
@@ -130,5 +130,5 @@ class Parser:
             right = self.match(TokenType.closed_paren)
             return ParenthesizedExpression(left, expr, right)
 
-        num_token = self.match(TokenType.number)
-        return LiteralExpression(num_token)
+        literal_token = self.match(TokenType.number)
+        return LiteralExpression(literal_token)
