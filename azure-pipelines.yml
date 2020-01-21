@@ -29,12 +29,12 @@ steps:
     pytest -q --exp='400' --ln='400'
   displayName: 'Running pytest with literal arguments'
 
-  - script: |
+- script: |
     pip install pytest pytest-azurepipelines
     pytest -q --exp='4' --ln='2 ^ 2'
   displayName: 'Running pytest with binary arguments'
 
-  - script: |
+- script: |
     pip install pytest pytest-azurepipelines
     pytest -q --exp='35' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
   displayName: 'Running pytest with parenthesized arguments'
