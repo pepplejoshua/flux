@@ -1,9 +1,13 @@
 from enum import Enum, auto
 # number, parenthesis, operators, whitespace, eof, expression types
 class TokenType(Enum):
+    # special tokens
     eof = auto()
-    # base type
+    bad_token = auto()
+    space = auto()
+    # literal tokens
     number = auto()
+    identifier = auto()
     # parenthesis
     open_paren = auto()
     closed_paren = auto()
@@ -15,14 +19,11 @@ class TokenType(Enum):
     modulo = auto()
     exponent = auto()
     assignment = auto()
-    # special tokens
-    space = auto()
-    bad_token = auto()
-    identifier = auto
     # expression tokens
-    num_expr = auto()
+    literal_expr = auto()
     bin_expr = auto()
     paren_expr = auto()
+    
 # TODO: create TokenTypes and implementations for these
 # '+=':, 
 # '-=':, 

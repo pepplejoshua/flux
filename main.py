@@ -15,6 +15,7 @@ def main():
         nline = False
     except IndexError:
         flag = False
+        nline = False
 
     while True:
         # this helps with my CI testing

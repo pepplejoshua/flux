@@ -11,7 +11,7 @@ class ExpressionEvaluator:
         # separate case for separate expression types 
         # num_expr, bin_expr
         
-        if isinstance(root, NumberExpression):
+        if isinstance(root, LiteralExpression):
             return root.token.val
         elif isinstance(root, BinaryExpression):
             left = self.evaluateexpression(root.left)

@@ -23,12 +23,12 @@ class Expression(ASyntaxNode):
     pass
 
 # a number expression which is both an expression and an abstract syntax node
-class NumberExpression(Expression):
+class LiteralExpression(Expression):
     def __init__(self, token: Token ):
         self.token = token
 
     def nType(self):
-        return TokenType.num_expr
+        return TokenType.literal_expr
     
     def getchildren(self):
         return (self.token,)

@@ -131,4 +131,4 @@ class Parser:
             return ParenthesizedExpression(left, expr, right)
 
         num_token = self.match(TokenType.number)
-        return NumberExpression(num_token)
+        return LiteralExpression(num_token)
