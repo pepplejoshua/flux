@@ -17,7 +17,7 @@ class Lexer:
         # advance current input position by 1
         self.pos += 1
         
-    def nextToken(self):
+    def lex(self):
         # number, parenthesis, operators, whitespace
         
         if self.pos+1 > len(self.input):

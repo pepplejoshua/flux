@@ -15,10 +15,10 @@ class Parser:
         self.exit = False
         self.error = False
         self.pos = 0
-        lex = Lexer(input)
+        lexer = Lexer(input)
         self.tokens = []
         self.diagnostics = []
-        token = lex.nextToken()
+        token = lexer.lex()
         
         # continue to tokenize input until eof is seen, the repl has received an exit command or a bad_token is read
         while token.token_t.name != 'eof':
@@ -27,7 +27,7 @@ class Parser:
             elif token.token_t is TokenType.bad_token:
                 self.error = True
                 break
-            token = lex.nextToken()
+            token = lexer.lex()
         if self.error:
             self.diagnostics += lex.diagnostics
             return
