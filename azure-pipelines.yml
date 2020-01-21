@@ -31,6 +31,5 @@ steps:
 #   displayName: 'pytest'
 
 - script: |
-    python main.py
-    1 + 2 - 3
+    python main.py -c '1 - 2 + (3 - 55)'
   displayName: 'Execute flux'
