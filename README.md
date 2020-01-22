@@ -2,21 +2,21 @@
 
 [![Build Status](https://dev.azure.com/pepplejoshua/office/_apis/build/status/pepplejoshua.flux?branchName=master)](https://dev.azure.com/pepplejoshua/office/_build/latest?definitionId=1&branchName=master)
 
-**nuggets:**
+## nuggets:
 - use type(i) to get the base type of a variable i
 - using isinstance(x, Y) does you one better and tells you if x is an instance of Y class
 - use termcolor module (cprint, colored) if there is the need to display colored terminal output
 
-**progress:**
+## progress:
 - lexer works (num, space, ops, parenthesis). it produces the leaves (nodes) from which our parse tree will be built [creates words]
 - parser takes lexemes and build an AST (def not optimized) and builds trees [uses words to create sentences]
 - parser done and added paren syntax, binary syntax
 
-**ongoing:**
+## ongoing:
 - write the type structure for the complex Expression types
 - type checking for numbers and boolean
 
-**interpreter commands:**
+## interpreter commands:
 ```
 Flux v0.0.1
 => .st
@@ -27,6 +27,7 @@ not displaying syntax tree
 Arigatōgozaimashita!
 ```
 > _.cc_ clears the terminal of previous inputs
+
 **syntax examples:**
 ```
 Flux v0.0.1
