@@ -16,8 +16,36 @@
 - write the type structure for the complex Expression types
 - type checking for numbers and boolean
 
+**interpreter commands:**
+```
+Flux v0.0.1
+=> .st
+displaying syntax tree
+=> .st
+not displaying syntax tree
+=> .q
+Arigatōgozaimashita!
+```
+> _.cc_ clears the terminal of previous inputs
 **syntax examples:**
 ```
+Flux v0.0.1
+=> 1
+1
+=> .st
+displaying syntax tree
+=> 1
+1
+└──LITERAL_EXPR
+    └──NUMBER [1]
+=> 1 + 2
+3
+└──BIN_EXPR
+    ├──LITERAL_EXPR
+    │   └──NUMBER [1]
+    ├──PLUS [+]
+    └──LITERAL_EXPR
+        └──NUMBER [2]
 => (-1) + (-1)
 -2
 └──BIN_EXPR
@@ -101,4 +129,6 @@
         │       │       └──CLOSED_PAREN [)]
         │       └──CLOSED_PAREN [)]
         └──CLOSED_PAREN [)]
+=> .q
+Arigatōgozaimashita!
 ```
