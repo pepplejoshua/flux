@@ -26,36 +26,44 @@ steps:
 
 - script: |
     pytest -s --exp='400' --ln='400'
-  displayName: 'Running pytest with literal expression'
+  displayName: 'Literal expression'
 
 - script: |
     pytest -s --exp='-250' --ln='-250'
-  displayName: 'Running pytest with negative unary operators on literal expression'
+  displayName: 'Negative unary operators on literal expression'
 
 - script: |
     pytest -s --exp='+500' --ln='+500'
-  displayName: 'Running pytest with positive unary operators on literal expression'
+  displayName: 'Positive unary operators on literal expression'
 
 - script: |
     pytest -s --exp='16' --ln='2 ^ 4'
-  displayName: 'Running pytest with exponent binary expression'
+  displayName: 'Exponent binary expression'
 
 - script: |
     pytest -s --exp='12' --ln='3 * 4'
-  displayName: 'Running pytest with multiplication binary expression'
+  displayName: 'Multiplication binary expression'
 
 - script: |
     pytest -s --exp='420' --ln='210 + 210'
-  displayName: 'Running pytest with addition binary expression'
+  displayName: 'Addition binary expression'
 
 - script: |
     pytest -s --exp='4' --ln='1000 - 996'
-  displayName: 'Running pytest with subtraction binary expression'
+  displayName: 'Subtraction binary expression'
+
+- script: |
+    pytest -s --exp='8' --ln='89 % 9'
+  displayName: 'Modulo binary expression'
 
 - script: |
     pytest -s --exp='35' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
-  displayName: 'Running pytest with parenthesized arguments'
+  displayName: 'Parenthesized arguments'
   
 - script: |
     pytest -s --exp='4' --ln='+1*(2^(-2*(-1)))'
-  displayName: 'Running pytest with combination of all expression types'
+  displayName: 'Combination of all expression types'
+
+- script: |
+    pytest -s --exp='1' --ln='+--+1'
+  displayName: 'Multiple unary operators on literal'

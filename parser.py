@@ -74,9 +74,12 @@ class Parser:
         left: None
         un_pre = Helper.getunaryoperatorprecedence(self.current().nType())
 
-        if un_pre != 0 and un_pre > parentprecendece:
+        # using >= vs > allows you to stack - or + as many times as you wish due to respecting precedence of the same level 
+        # --1 would be read as un_op - un_op - literal - number (correctly when using >= since 2 -s appear together)
+        # --1 would've been read as un_op - <break since - and - have same precedence> - continue to parseprimaryexpression instead (generates error when in match())
+        if un_pre != 0 and un_pre >= parentprecendece:
             sign = self.nexttoken()
-            operand = self.parseprimaryexpression()
+            operand = self.parseexpression(un_pre)
             left = UnaryExpression(sign, operand)
         else:
             left = self.parseprimaryexpression()
