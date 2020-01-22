@@ -29,13 +29,13 @@ class Helper:
     
     # get operator precedence of binary operator token else return 
     @staticmethod
-    def getbinaryoperatorprecedence(self, tokentype):
+    def getbinaryoperatorprecedence(tokentype):
         operators ={TokenType.plus: 1,
                 TokenType.minus: 1,
                 TokenType.multiply: 2, 
                 TokenType.divide: 2, 
                 TokenType.modulo: 2,
-                TokenType.exponent: 3,
+                TokenType.exponent: 3}
 
-        pre = operators[tokentype] if tokentype in operators else 0
+        pre = operators[tokentype] if (tokentype in operators) else 0
         return pre
