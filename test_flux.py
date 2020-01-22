@@ -10,6 +10,6 @@ def eval(eq):
 def test_eval(ln, exp):
         req = int(exp)
         res = eval(ln)
-        cprint(f"\n\nCalculation: {ln}", 'green')
+        cprint(f"\n\nCalculation: {ln} ?= {exp}", 'green')
         cprint(f"Result[{res}] == Expected[{req}]", 'yellow')
         assert res == req
