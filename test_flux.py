@@ -1,6 +1,7 @@
 from flux import entry
 import pytest
 import sys
+from termcolor import cprint
 
 print(sys.argv)
 def eval(eq):
@@ -10,5 +11,6 @@ def eval(eq):
 def test_eval(ln, exp):
         req = int(exp)
         res = eval(ln)
-        print(res, '==', req)
+        cprint(f"\n\nCalculation: {ln}", 'green')
+        cprint(f"Result[{res}] == Expected[{req}]", 'yellow')
         assert res == req

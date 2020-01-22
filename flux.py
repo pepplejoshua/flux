@@ -6,7 +6,8 @@ import sys
     
 def entry(flag, nline, test=False, code=False):
     # get single line and then tokenize repeatedly > repl
-    cprint('Flux v0.0.1', 'green')
+    if not test:
+        cprint('Flux v0.0.1', 'green')
     res = None
     showtree = False
 
@@ -20,7 +21,8 @@ def entry(flag, nline, test=False, code=False):
 
         # user requested exit 
         if line == '.q':
-            cprint('Arigatōgozaimashita!', 'yellow')
+            if not test:
+                cprint('Arigatōgozaimashita!', 'yellow')
             return res
             break
         # toggle showing syntax tree
@@ -53,7 +55,8 @@ def entry(flag, nline, test=False, code=False):
             # evaluate a syntactically correct tree
             eval = ExpressionEvaluator(tree.root)
             res = eval.evaluate()
-            print(res)
+            if not test:
+                print(res)
             
         if showtree:
             prettyprint(tree.root)
