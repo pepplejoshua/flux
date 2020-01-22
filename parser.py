@@ -2,14 +2,6 @@ from lexer import Lexer
 from termcolor import cprint
 from expression import *
 # a recursive descent parser (idk what that means atm)
-# this means that the parser can be broken down into functions that cover different areas of the grammar
-# reducing importance:
-# parseexponent() ^ will be the exponent symbol
-# parsefactors() *, / and % will be a separate function since they have higher precedence (separate function which gets called first)
-# parseterms() +, - will be in the regular precedence level (main parse function)
-# since parseterms() is called first and parsefactors() implements the same logic as it,
-# calling parsefactors() before any execution inside parseterms() ensures that a higher precedence subtree is built and returned as 
-# the operand of a lower precedence subtree
 class Parser: 
     def __init__(self, input):
         self.exit = False
@@ -68,65 +60,46 @@ class Parser:
     # like numbers and basic literals
     def parse(self):
         # this is the main call. 
-        expr = self.parseterm()
+        expr = self.parseexpression()
         eof_token = self.match(TokenType.eof)
         return SyntaxTree(self.diagnostics, expr, eof_token)
 
-    # this is the entry point to begin parsing and building the tree
-    # parse regular operators last, due to the order of the calls
-    def parseterm(self):
-        left = self.parsefactor()
-        
-        cur = self.current()
-        while(cur.token_t == TokenType.plus \
-            or cur.token_t == TokenType.minus \
-            and not self.error):
-            oper = self.nexttoken()
-            right = self.parsefactor()
-            left = BinaryExpression(left, oper, right)
-            cur = self.current()
-        return left
-
-    # this makes sure *, / and % are built into the tree second
-    def parsefactor(self):
-        left = self.parseexponent()
-        
-        cur = self.current()
-
-        
-        # recursive descent works here. why?
-        while(cur.token_t == TokenType.multiply \
-            or cur.token_t == TokenType.divide \
-            or cur.token_t == TokenType.modulo \
-            and not self.error):
-            oper = self.nexttoken()
-            right = self.parseexponent()
-            left = BinaryExpression(left, oper, right)
-            cur = self.current()
-        return left
-
-    # this makes sure exponents are built into the tree first
-    def parseexponent(self):
+    # this parses the tree by assuming:
+    # token 1 & 3 = operand
+    # token 2 is sent to a function to determine its precedence and perform 
+    # a continuous forward look provided a non operator isn't read 
+    # or a lower precedence operator isn't read
+    def parseexpression(self, parentprecendece=0):
         left = self.parseprimaryexpression()
-        
-        cur = self.current()
 
-        # recursive descent works here. why?
-        while(cur.token_t == TokenType.exponent \
-            and not self.error):
-            oper = self.nexttoken()
-            right = self.parseprimaryexpression()
-            left = BinaryExpression(left, oper, right)
-            cur = self.current()
+        while True:
+            precedence = self.getbinaryoperatorprecedence(self.current().nType())
+            if precedence == 0 or precedence <= parentprecendece:
+                break
+            operator = self.nexttoken()
+            right = self.parseexpression(precedence)
+            left = BinaryExpression(left, operator, right)
         return left
+    
+    # get operator precedence of binary operator token else return 0
+    def getbinaryoperatorprecedence(self, tokentype):
+        operators ={TokenType.plus: 1,
+                TokenType.minus: 1,
+                TokenType.multiply: 2, 
+                TokenType.divide: 2, 
+                TokenType.modulo: 2,
+                TokenType.exponent: 3}
 
+
+        pre = operators[tokentype] if tokentype in operators else 0
+        return pre
 
     # this will handle number expressions and parenthesized expressions constructions 
     # as they are to be considered first before other expression kinds
     def parseprimaryexpression(self):
         if (self.current().token_t == TokenType.open_paren):
             left = self.nexttoken()
-            expr = self.parseterm() # entry point to begin parsing
+            expr = self.parseexpression() # entry point to begin parsing
             right = self.match(TokenType.closed_paren)
             return ParenthesizedExpression(left, expr, right)
 

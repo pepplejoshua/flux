@@ -37,17 +37,20 @@ def entry(flag, nline, test=False, code=False):
             continue
  
         parser = Parser(line)
+        # handle any lexing errors
         if parser.error:
             for msg in parser.diagnostics:
                 cprint(msg, 'red', 'on_grey')
             continue
         # parse the tokens and build a tree
         tree = parser.parse()
+        # handle any parsing errors
         if parser.error:
             for msg in parser.diagnostics:
                 cprint(msg, 'red', 'on_grey')
             continue
         else:
+            # evaluate a syntactically correct tree
             eval = ExpressionEvaluator(tree.root)
             res = eval.evaluate()
             print(res)
