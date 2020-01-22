@@ -26,7 +26,7 @@ not displaying syntax tree
 => .q
 Arigatōgozaimashita!
 ```
-> _.cc_ clears the terminal of previous inputs
+> **Note:** _.cc_ command clears the terminal of previous inputs
 
 **syntax examples:**
 ```
