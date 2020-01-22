@@ -29,6 +29,15 @@ class Helper:
     
     # get operator precedence of binary operator token else return 
     @staticmethod
+    def getunaryoperatorprecedence(tokentype):
+        operators ={TokenType.plus: 4,
+                TokenType.minus: 4}
+
+        pre = operators[tokentype] if (tokentype in operators) else 0
+        return pre
+    
+    # get operator precedence of binary operator token else return 
+    @staticmethod
     def getbinaryoperatorprecedence(tokentype):
         operators ={TokenType.plus: 1,
                 TokenType.minus: 1,

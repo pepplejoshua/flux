@@ -21,20 +21,41 @@ steps:
 
 - script: |
     pip install --upgrade pip
-    pip install termcolor
+    pip install pytest pytest-azurepipelines termcolor
   displayName: 'Install dependencies'
 
 - script: |
-    pip install pytest pytest-azurepipelines
-    pytest -q --exp='400' --ln='400'
-  displayName: 'Running pytest with literal arguments'
+    pytest --exp='400' --ln='400'
+  displayName: 'Running pytest with literal expression'
 
 - script: |
-    pip install pytest pytest-azurepipelines
-    pytest -q --exp='4' --ln='2 ^ 2'
-  displayName: 'Running pytest with binary arguments'
+    pytest --exp='-250' --ln='-250'
+  displayName: 'Running pytest with negative unary operators on literal expression'
 
 - script: |
-    pip install pytest pytest-azurepipelines
-    pytest -q --exp='35' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
+    pytest --exp='+500' --ln='+500'
+  displayName: 'Running pytest with positive unary operators on literal expression'
+
+- script: |
+    pytest --exp='16' --ln='2 ^ 4'
+  displayName: 'Running pytest with exponent binary expression'
+
+- script: |
+    pytest --exp='12' --ln='3 * 4'
+  displayName: 'Running pytest with multiplication binary expression'
+
+- script: |
+    pytest --exp='420' --ln='210 + 210'
+  displayName: 'Running pytest with addition binary expression'
+
+- script: |
+    pytest --exp='4' --ln='1000 - 996'
+  displayName: 'Running pytest with subtraction binary expression'
+
+- script: |
+    pytest --exp='35' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
   displayName: 'Running pytest with parenthesized arguments'
+  
+- script: |
+    pytest -q --exp='4' --ln='+1*(2^(-2*(-1)))'
+  displayName: 'Running pytest with combination of all expression types'

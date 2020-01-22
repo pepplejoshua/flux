@@ -12,4 +12,87 @@ ongoing:
 - write the type structure for the complex Expression types
 - type checking for numbers and boolean
 
-TODO:
+syntax examples:
+=> (-1) + (-1)
+-2
+└──BIN_EXPR
+    ├──PAREN_EXPR
+    │   ├──OPEN_PAREN [(]
+    │   ├──UNARY_EXPR
+    │   │   ├──MINUS [-]
+    │   │   └──LITERAL_EXPR
+    │   │       └──NUMBER [1]
+    │   └──CLOSED_PAREN [)]
+    ├──PLUS [+]
+    └──PAREN_EXPR
+        ├──OPEN_PAREN [(]
+        ├──UNARY_EXPR
+        │   ├──MINUS [-]
+        │   └──LITERAL_EXPR
+        │       └──NUMBER [1]
+        └──CLOSED_PAREN [)]
+
+=> -1
+-1
+└──UNARY_EXPR
+    ├──MINUS [-]
+    └──LITERAL_EXPR
+        └──NUMBER [1]
+
+=> +1 - 2
+-1
+└──BIN_EXPR
+    ├──UNARY_EXPR
+    │   ├──PLUS [+]
+    │   └──LITERAL_EXPR
+    │       └──NUMBER [1]
+    ├──MINUS [-]
+    └──LITERAL_EXPR
+        └──NUMBER [2]
+
+=> 1 + -1 + 2
+2
+└──BIN_EXPR
+    ├──BIN_EXPR
+    │   ├──LITERAL_EXPR
+    │   │   └──NUMBER [1]
+    │   ├──PLUS [+]
+    │   └──UNARY_EXPR
+    │       ├──MINUS [-]
+    │       └──LITERAL_EXPR
+    │           └──NUMBER [1]
+    ├──PLUS [+]
+    └──LITERAL_EXPR
+        └──NUMBER [2]
+
+=> +1*(2^(-2*(-1)))      
+4
+└──BIN_EXPR
+    ├──UNARY_EXPR
+    │   ├──PLUS [+]
+    │   └──LITERAL_EXPR
+    │       └──NUMBER [1]
+    ├──MULTIPLY [*]
+    └──PAREN_EXPR
+        ├──OPEN_PAREN [(]
+        ├──BIN_EXPR
+        │   ├──LITERAL_EXPR
+        │   │   └──NUMBER [2]
+        │   ├──EXPONENT [^]
+        │   └──PAREN_EXPR
+        │       ├──OPEN_PAREN [(]
+        │       ├──BIN_EXPR
+        │       │   ├──UNARY_EXPR
+        │       │   │   ├──MINUS [-]
+        │       │   │   └──LITERAL_EXPR
+        │       │   │       └──NUMBER [2]
+        │       │   ├──MULTIPLY [*]
+        │       │   └──PAREN_EXPR
+        │       │       ├──OPEN_PAREN [(]
+        │       │       ├──UNARY_EXPR
+        │       │       │   ├──MINUS [-]
+        │       │       │   └──LITERAL_EXPR
+        │       │       │       └──NUMBER [1]
+        │       │       └──CLOSED_PAREN [)]
+        │       └──CLOSED_PAREN [)]
+        └──CLOSED_PAREN [)]

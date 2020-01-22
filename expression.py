@@ -15,8 +15,28 @@ from tokens import *
 #     / \
 #    1   2 [since operators are the same, the parse tree is easier to construct]
 
-# a base expression syntax abstract class which is of type ASyntax node
+#      _
+#      |
+#      +   
+#     / \
+#    1   2 
+# -2 * 3 can be parsed as:
+#      _
+#      |
+#      *   
+#     / \
+#    1   3  (wrong, because binary * is ranked stronger than unary -) 
+#     
+#      or
+#
+#      *
+#     / \
+#    -   3 
+#    |
+#    1      (right due to normal mathematic operators parsing, unary - is ranked stronger than binary *)
+# the lower an operand on the tree, the stronger the precedence.
 
+# a base expression syntax abstract class which is of type ASyntax node
 # an Expression is a node in the syntax tree
 # a complex node which could be composed of tokens or other Expression types
 class Expression(ASyntaxNode):
@@ -33,6 +53,16 @@ class LiteralExpression(Expression):
     def getchildren(self):
         return (self.token,)
 
+class UnaryExpression(Expression):
+    def __init__(self, operator: Token, operand: Expression):
+        self.sign = operator
+        self.operand = operand
+
+    def nType(self):
+        return TokenType.unary_expr
+
+    def getchildren(self):
+        return (self.sign, self.operand)
 
 # a number expression which is both an expression and an abstract syntax node
 class BinaryExpression(Expression):

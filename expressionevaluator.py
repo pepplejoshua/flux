@@ -9,10 +9,21 @@ class ExpressionEvaluator:
 
     def evaluateexpression(self, root):
         # separate case for separate expression types 
-        # num_expr, bin_expr
+        # num_expr, bin_expr, unary_expr, paren_expr
         
         if isinstance(root, LiteralExpression):
             return root.token.val
+
+        elif isinstance(root, UnaryExpression):
+            sign = root.sign
+            oper = self.evaluateexpression(root.operand)
+
+            if sign.token_t == TokenType.plus:
+                return oper
+            elif sign.token_t == TokenType.minus:
+                return -oper
+            else: raise Exception(f'Unknown unary operator <{root.oper.token_t.name}>')
+
         elif isinstance(root, BinaryExpression):
             left = self.evaluateexpression(root.left)
             right = self.evaluateexpression(root.right)
@@ -30,8 +41,10 @@ class ExpressionEvaluator:
             elif root.oper.token_t == TokenType.exponent:
                 return left ** right
             else:
-                raise Exception('Unknown binary operator <{root.oper.token_t.name}>')
+                raise Exception(f'Unknown binary operator <{root.oper.token_t.name}>')
+
         elif isinstance(root, ParenthesizedExpression): # evaluate the expression inside the brackets
             return self.evaluateexpression(root.expr)
+
         else:
-            raise Exception('Unknown node [{root.nType}]')
+            raise Exception(f'Unknown node [{root.nType}]')

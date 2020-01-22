@@ -65,14 +65,22 @@ class Parser:
         eof_token = self.match(TokenType.eof)
         return SyntaxTree(self.diagnostics, expr, eof_token)
 
-    # this parses the tree by assuming:
+    # this parses the tree by assuming (TODO: rethink and rewrite):
     # token 1 & 3 = operand
     # token 2 is sent to a function to determine its precedence and perform 
     # a continuous forward look provided a non operator isn't read 
     # or a lower precedence operator isn't read
     def parseexpression(self, parentprecendece=0):
-        left = self.parseprimaryexpression()
+        left: None
+        un_pre = Helper.getunaryoperatorprecedence(self.current().nType())
 
+        if un_pre != 0 and un_pre > parentprecendece:
+            sign = self.nexttoken()
+            operand = self.parseprimaryexpression()
+            left = UnaryExpression(sign, operand)
+        else:
+            left = self.parseprimaryexpression()
+        
         while True:
             precedence = Helper.getbinaryoperatorprecedence(self.current().nType())
             if precedence == 0 or precedence <= parentprecendece:
