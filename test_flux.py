@@ -10,4 +10,5 @@ def eval(eq):
 def test_eval(ln, exp):
         req = int(exp)
         res = eval(ln)
+        print(res, '==', req)
         assert res == req
