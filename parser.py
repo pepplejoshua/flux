@@ -74,7 +74,7 @@ class Parser:
         left = self.parseprimaryexpression()
 
         while True:
-            precedence = Helper().getbinaryoperatorprecedence(self.current().nType())
+            precedence = Helper.getbinaryoperatorprecedence(self.current().nType())
             if precedence == 0 or precedence <= parentprecendece:
                 break
             operator = self.nexttoken()
