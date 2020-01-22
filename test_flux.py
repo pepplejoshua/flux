@@ -3,7 +3,6 @@ import pytest
 import sys
 from termcolor import cprint
 
-print(sys.argv)
 def eval(eq):
         res = entry(True, False, test=True, code=eq)
         return res
