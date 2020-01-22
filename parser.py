@@ -1,5 +1,6 @@
 from lexer import Lexer
 from termcolor import cprint
+from helper import Helper
 from expression import *
 # a recursive descent parser (idk what that means atm)
 class Parser: 
@@ -73,7 +74,7 @@ class Parser:
         left = self.parseprimaryexpression()
 
         while True:
-            precedence = self.getbinaryoperatorprecedence(self.current().nType())
+            precedence = Helper().getbinaryoperatorprecedence(self.current().nType())
             if precedence == 0 or precedence <= parentprecendece:
                 break
             operator = self.nexttoken()
@@ -81,19 +82,6 @@ class Parser:
             left = BinaryExpression(left, operator, right)
         return left
     
-    # get operator precedence of binary operator token else return 0
-    def getbinaryoperatorprecedence(self, tokentype):
-        operators ={TokenType.plus: 1,
-                TokenType.minus: 1,
-                TokenType.multiply: 2, 
-                TokenType.divide: 2, 
-                TokenType.modulo: 2,
-                TokenType.exponent: 3}
-
-
-        pre = operators[tokentype] if tokentype in operators else 0
-        return pre
-
     # this will handle number expressions and parenthesized expressions constructions 
     # as they are to be considered first before other expression kinds
     def parseprimaryexpression(self):
