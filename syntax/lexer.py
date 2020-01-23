@@ -1,5 +1,5 @@
-from tokens import * # contains Token, TokenType
-from helper import Helper
+from .tokens import * # contains Token, TokenType
+from .helper import Helper
 class Lexer:
     def __init__(self, input):
         self.input = input

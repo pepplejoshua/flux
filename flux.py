@@ -1,9 +1,9 @@
-from parser import Parser
-from tokens import *
+from syntax.parser import Parser
+from syntax.tokens import *
 from expressionevaluator import ExpressionEvaluator
 from os import name, system
 import sys 
-    
+
 def entry(flag, nline, test=False, code=False):
     # get single line and then tokenize repeatedly > repl
     if not test:
@@ -98,4 +98,3 @@ if __name__ == '__main__':
         flag = False
         nline = False
     entry(flag, nline)
-    

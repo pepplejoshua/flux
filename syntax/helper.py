@@ -1,5 +1,5 @@
-from tokentype import TokenType
-from tokens import Token
+from .tokentype import TokenType
+from .tokens import Token
 from termcolor import cprint
 class Helper:
     operators ={'+': TokenType.plus,

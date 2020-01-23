@@ -1,4 +1,4 @@
-from expression import *
+from syntax.expression import *
 # this recursively traverses a parse tree[SyntaxTree] and returns a result
 class ExpressionEvaluator:
     def __init__(self, rootExpr):

@@ -1,7 +1,7 @@
-from lexer import Lexer
+from .lexer import Lexer
 from termcolor import cprint
-from helper import Helper
-from expression import *
+from .helper import Helper
+from .expression import *
 # a recursive descent parser (idk what that means atm)
 class Parser: 
     def __init__(self, input):

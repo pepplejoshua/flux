@@ -1,6 +1,6 @@
 from termcolor import cprint
-from syntax import ASyntaxNode
-from tokentype import TokenType
+from .syntax import ASyntaxNode
+from .tokentype import TokenType
 # by making Token class inherit the Abstract Syntax node, they become the building blocks of either simple 
 # or complex syntax nodes. They are the leaves of the syntax tree
 class Token(ASyntaxNode):

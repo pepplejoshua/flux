@@ -1,5 +1,5 @@
-from syntax import *
-from tokens import *
+from .syntax import *
+from .tokens import *
 # the higher the precedence of the operator, the lower in the Tree it'll be. 
 # 1 + 2 * 3
 #      +     [2nd operation]
