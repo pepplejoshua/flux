@@ -10,26 +10,26 @@ class Helper:
                 '%': TokenType.modulo,
                 '^': TokenType.exponent}
     ident = []
-    def isoperator(self, val):
+    def isoperator(self, val: str):
         """Check if val is an operator"""
         return val in self.operators
     
-    def isparenthesis(self, val):
+    def isparenthesis(self, val: str):
         """Check if val is either open or closed parenthesis"""
         return val in ['(', ')']
 
-    def isidentifier(self, val):
+    def isidentifier(self, val: str):
         """Check if val is a reserved language identifier"""
         return val in self.ident
 
-    def getoperatortokentype(self, val, pos):
+    def getoperatortoken(self, val: str, pos: int):
         """This takes an operator and returns the appropriate token type"""
         token_type = self.operators[val]
         if token_type: return Token(token_type, pos, val)
     
     # get operator precedence of binary operator token else return 
     @staticmethod
-    def getunaryoperatorprecedence(tokentype):
+    def getunaryoperatorprecedence(tokentype: TokenType):
         operators ={TokenType.plus: 4,
                 TokenType.minus: 4}
 
@@ -38,7 +38,7 @@ class Helper:
     
     # get operator precedence of binary operator token else return 
     @staticmethod
-    def getbinaryoperatorprecedence(tokentype):
+    def getbinaryoperatorprecedence(tokentype: TokenType):
         operators ={TokenType.plus: 1,
                 TokenType.minus: 1,
                 TokenType.multiply: 2, 

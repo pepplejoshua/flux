@@ -70,16 +70,16 @@ def prettyprint(node, indent='', is_last=True):
     marker = '└──' if is_last else '├──'
 
     # constructing output 
-    out = indent + marker + node.nType().name.upper()
+    out = indent + marker + node.nodetype().name.upper()
     # default color
     color = 'magenta'
     # if we have run into a leaf (Token inside an expression)
     if isinstance(node, Token):
         # numbers get green, other types get cyan
-        color = 'green' if node.token_t is TokenType.number else 'cyan'
+        color = 'green' if node.tokentype is TokenType.number else 'cyan'
         cprint(out + ' [' + str(node.val) + ']', color)
         return 
-    cprint(indent + marker + node.nType().name.upper(), color)
+    cprint(indent + marker + node.nodetype().name.upper(), color)
 
     # set the indent for the next call
     indent += '    ' if is_last else '│   '

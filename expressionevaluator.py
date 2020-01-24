@@ -18,33 +18,33 @@ class ExpressionEvaluator:
             sign = root.sign
             oper = self.evaluateexpression(root.operand)
 
-            if sign.token_t == TokenType.plus:
+            if sign.tokentype == TokenType.plus:
                 return oper
-            elif sign.token_t == TokenType.minus:
+            elif sign.tokentype == TokenType.minus:
                 return -oper
-            else: raise Exception(f'Unknown unary operator <{root.oper.token_t.name}>')
+            else: raise Exception(f'Unknown unary operator <{root.oper.tokentype.name}>')
 
         elif isinstance(root, BinaryExpression):
             left = self.evaluateexpression(root.left)
             right = self.evaluateexpression(root.right)
 
-            if root.oper.token_t == TokenType.plus:
+            if root.oper.tokentype == TokenType.plus:
                 return left + right
-            elif root.oper.token_t == TokenType.minus:
+            elif root.oper.tokentype == TokenType.minus:
                 return left - right
-            elif root.oper.token_t == TokenType.multiply:
+            elif root.oper.tokentype == TokenType.multiply:
                 return left * right
-            elif root.oper.token_t in [TokenType.divide, TokenType.modulo]:
+            elif root.oper.tokentype in [TokenType.divide, TokenType.modulo]:
                 if left == 0:
                     raise ZeroDivisionError()
-                return left / right if root.oper.token_t == TokenType.divide else left % right
-            elif root.oper.token_t == TokenType.exponent:
+                return left / right if root.oper.tokentype == TokenType.divide else left % right
+            elif root.oper.tokentype == TokenType.exponent:
                 return left ** right
             else:
-                raise Exception(f'Unknown binary operator <{root.oper.token_t.name}>')
+                raise Exception(f'Unknown binary operator <{root.oper.tokentype.name}>')
 
         elif isinstance(root, ParenthesizedExpression): # evaluate the expression inside the brackets
             return self.evaluateexpression(root.expr)
 
         else:
-            raise Exception(f'Unknown node [{root.nType}]')
+            raise Exception(f'Unknown node [{root.nodetype}]')

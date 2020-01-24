@@ -39,7 +39,7 @@ from .tokens import *
 # a base expression syntax abstract class which is of type ASyntax node
 # an Expression is a node in the syntax tree
 # a complex node which could be composed of tokens or other Expression types
-class Expression(ASyntaxNode):
+class Expression(SyntaxNode):
     pass
 
 # a number expression which is both an expression and an abstract syntax node
@@ -47,7 +47,7 @@ class LiteralExpression(Expression):
     def __init__(self, token: Token ):
         self.token = token
 
-    def nType(self):
+    def nodetype(self):
         return TokenType.literal_expr
     
     def getchildren(self):
@@ -58,7 +58,7 @@ class UnaryExpression(Expression):
         self.sign = operator
         self.operand = operand
 
-    def nType(self):
+    def nodetype(self):
         return TokenType.unary_expr
 
     def getchildren(self):
@@ -71,7 +71,7 @@ class BinaryExpression(Expression):
         self.oper = oper
         self.right = right
 
-    def nType(self):
+    def nodetype(self):
         return TokenType.bin_expr
 
     def getchildren(self):
@@ -84,7 +84,7 @@ class ParenthesizedExpression(Expression):
         self.expr = expr
         self.right_paren = right_paren
 
-    def nType(self):
+    def nodetype(self):
         return TokenType.paren_expr
 
     def getchildren(self):

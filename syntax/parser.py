@@ -4,7 +4,7 @@ from .helper import Helper
 from .expression import *
 # a recursive descent parser (idk what that means atm)
 class Parser: 
-    def __init__(self, input):
+    def __init__(self, input: str):
         self.exit = False
         self.error = False
         self.pos = 0
@@ -14,19 +14,19 @@ class Parser:
         token = lexer.lex()
         
         # continue to tokenize input until eof is seen, the repl has received an exit command or a bad_token is read
-        while token.token_t.name != 'eof':
-            if (token.token_t not in [TokenType.bad_token, TokenType.space]):
+        while token.tokentype.name != 'eof':
+            if (token.tokentype not in [TokenType.bad_token, TokenType.space]):
                 self.tokens.append(token)
-            elif token.token_t is TokenType.bad_token:
+            elif token.tokentype is TokenType.bad_token:
                 self.error = True
                 break
             token = lexer.lex()
         if self.error:
             self.diagnostics += lexer.diagnostics
             return
-        elif token.token_t.name == 'eof': self.tokens.append(token)
+        elif token.tokentype.name == 'eof': self.tokens.append(token)
 
-    def lookahead(self, offset):
+    def lookahead(self, offset: int):
         # this returns the token offset positions away from current from the list of tokens
         index = offset + self.pos
         if index >= len(self.tokens):
@@ -45,15 +45,15 @@ class Parser:
 
     # this checks if the current() token is the expected token_type and returns the current token if it is
     # else it returns a fabricated token
-    def match(self, token_type):
+    def match(self, token_type: TokenType):
         if self.error:
             return Token(token_type, self.current().pos)
         else:
-            if (self.current().token_t == token_type):
+            if (self.current().tokentype == token_type):
                 return self.nexttoken()
             else:
                 # tell user about unexpected token and what token was expected in that position
-                self.diagnostics.append(f'ERROR: Unexpected token <{self.current().token_t}>. Expected <{token_type}>')
+                self.diagnostics.append(f'ERROR: Unexpected token <{self.current().tokentype}>. Expected <{token_type}>')
                 self.error = True
                 return Token(token_type, self.current().pos)
 
@@ -71,8 +71,8 @@ class Parser:
     # a continuous forward look provided a non operator isn't read 
     # or a lower precedence operator isn't read
     def parseexpression(self, parentprecendece=0):
-        left: None
-        un_pre = Helper.getunaryoperatorprecedence(self.current().nType())
+        left: Expression
+        un_pre = Helper.getunaryoperatorprecedence(self.current().nodetype())
 
         # using >= vs > allows you to stack - or + as many times as you wish due to respecting precedence of the same level 
         # --1 would be read as un_op - un_op - literal - number (correctly when using >= since 2 -s appear together)
@@ -83,9 +83,9 @@ class Parser:
             left = UnaryExpression(sign, operand)
         else:
             left = self.parseprimaryexpression()
-        
+        # you can choose to handle post-fix cases in between unary ops and regular ops
         while True:
-            precedence = Helper.getbinaryoperatorprecedence(self.current().nType())
+            precedence = Helper.getbinaryoperatorprecedence(self.current().nodetype())
             if precedence == 0 or precedence <= parentprecendece:
                 break
             operator = self.nexttoken()
@@ -96,7 +96,7 @@ class Parser:
     # this will handle number expressions and parenthesized expressions constructions 
     # as they are to be considered first before other expression kinds
     def parseprimaryexpression(self):
-        if (self.current().token_t == TokenType.open_paren):
+        if (self.current().tokentype == TokenType.open_paren):
             left = self.nexttoken()
             expr = self.parseexpression() # entry point to begin parsing
             right = self.match(TokenType.closed_paren)

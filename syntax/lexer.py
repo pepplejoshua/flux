@@ -1,7 +1,7 @@
 from .tokens import * # contains Token, TokenType
 from .helper import Helper
 class Lexer:
-    def __init__(self, input):
+    def __init__(self, input: str):
         self.input = input
         self.pos = 0
         self.helper = Helper()
@@ -69,7 +69,7 @@ class Lexer:
 
         elif self.helper.isoperator(self.current()):
             # checking for operators
-            token = self.helper.getoperatortokentype(self.current(), self.pos)
+            token = self.helper.getoperatortoken(self.current(), self.pos)
             self.next()
             return token
 
