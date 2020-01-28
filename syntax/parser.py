@@ -26,7 +26,7 @@ class Parser:
             return
         elif token.tokentype.name == 'eof': self.tokens.append(token)
 
-    def lookahead(self, offset: int):
+    def lookahead(self, offset: int) -> Token:
         # this returns the token offset positions away from current from the list of tokens
         index = offset + self.pos
         if index >= len(self.tokens):
@@ -34,18 +34,18 @@ class Parser:
             index = len(self.tokens) - 1
         return self.tokens[index]
 
-    def current(self):
+    def current(self) -> Token:
         return self.lookahead(0)
 
     # this returns the current token after increasing tokens[index] by 1
-    def nexttoken(self):
+    def nexttoken(self) -> Token:
         cur = self.current()
         self.pos += 1
         return cur
 
     # this checks if the current() token is the expected token_type and returns the current token if it is
     # else it returns a fabricated token
-    def match(self, token_type: TokenType):
+    def match(self, token_type: TokenType) -> Token:
         if self.error:
             return Token(token_type, self.current().pos)
         else:
@@ -59,7 +59,7 @@ class Parser:
 
     # parsing should begin in the leaves since they're usually the primary expressions
     # like numbers and basic literals
-    def parse(self):
+    def parse(self) -> SyntaxTree:
         # this is the main call. 
         expr = self.parseexpression()
         eof_token = self.match(TokenType.eof)
@@ -70,7 +70,7 @@ class Parser:
     # token 2 is sent to a function to determine its precedence and perform 
     # a continuous forward look provided a non operator isn't read 
     # or a lower precedence operator isn't read
-    def parseexpression(self, parentprecendece=0):
+    def parseexpression(self, parentprecendece=0) -> Expression:
         left: Expression
         un_pre = Helper.getunaryoperatorprecedence(self.current().nodetype())
 
@@ -95,12 +95,19 @@ class Parser:
     
     # this will handle number expressions and parenthesized expressions constructions 
     # as they are to be considered first before other expression kinds
-    def parseprimaryexpression(self):
+    def parseprimaryexpression(self) -> Expression:
         if (self.current().tokentype == TokenType.open_paren):
             left = self.nexttoken()
             expr = self.parseexpression() # entry point to begin parsing
             right = self.match(TokenType.closed_paren)
             return ParenthesizedExpression(left, expr, right)
 
-        literal_token = self.match(TokenType.number)
-        return LiteralExpression(literal_token)
+        elif self.current().tokentype in (TokenType.true, TokenType.false):
+            keyword = self.current()
+            val = True if self.nexttoken().tokentype == TokenType.true else False # t is t and f otherwise
+            val = bool(val)
+            return LiteralExpression(keyword, val) 
+
+        else:
+            literal_token = self.match(TokenType.number)
+            return LiteralExpression(literal_token)

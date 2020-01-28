@@ -7,7 +7,7 @@ class Lexer:
         self.helper = Helper()
         self.diagnostics = []
     
-    def current(self):
+    def current(self) -> chr:
         # lexing complete condition
         if self.pos >= len(self.input):
             return '\0'
@@ -17,7 +17,7 @@ class Lexer:
         # advance current input position by 1
         self.pos += 1
         
-    def lex(self):
+    def lex(self) -> Token:
         # number, parenthesis, operators, whitespace
         
         if self.pos+1 > len(self.input):
@@ -32,8 +32,8 @@ class Lexer:
 
             sbstr = self.input[strt:self.pos]
             # check if the substring is a reserved identifier
-            if self.helper.isidentifier(sbstr):
-                token = Token(TokenType.identifier, strt, sbstr)
+            if self.helper.iskeyword(sbstr):
+                token = self.helper.getkeywordtoken(sbstr, strt)
             else:
                 self.diagnostics.append(f'ERROR: Unknown identifier [{sbstr}]')
                 token = Token(TokenType.bad_token, strt, sbstr)
@@ -48,10 +48,11 @@ class Lexer:
                 self.next()
 
             sbstr = self.input[strt:self.pos]
-            sbstr = int(sbstr)
             
             # if the entire string of digits cannot be represented as a number, we want to raise an error
-            if not sbstr:
+            try:
+                sbstr = int(sbstr)
+            except ValueError:
                 self.diagnostics.append(f'ERROR: [{sbstr}] isn\'t a valid number')
 
             token = Token(TokenType.number, strt, sbstr)

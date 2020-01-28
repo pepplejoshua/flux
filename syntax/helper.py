@@ -9,36 +9,46 @@ class Helper:
                 '=': TokenType.assignment, 
                 '%': TokenType.modulo,
                 '^': TokenType.exponent}
-    ident = []
-    def isoperator(self, val: str):
+
+    keywords = {'true': TokenType.true,
+    'false': TokenType.false}
+
+    def isoperator(self, val: str) -> bool:
         """Check if val is an operator"""
         return val in self.operators
     
-    def isparenthesis(self, val: str):
+    def isparenthesis(self, val: str) -> bool:
         """Check if val is either open or closed parenthesis"""
         return val in ['(', ')']
 
-    def isidentifier(self, val: str):
+    def iskeyword(self, val: str) -> bool:
         """Check if val is a reserved language identifier"""
-        return val in self.ident
+        return val in self.keywords
 
-    def getoperatortoken(self, val: str, pos: int):
+    def getoperatortoken(self, val: str, pos: int) -> Token:
         """This takes an operator and returns the appropriate token type"""
         token_type = self.operators[val]
         if token_type: return Token(token_type, pos, val)
     
     # get operator precedence of binary operator token else return 
+    def getkeywordtoken(self, val: str, pos: int) -> Token:
+        token_type = self.keywords[val] if (val in self.keywords) else 0
+        val = True if val == 'true' else False
+        if token_type: return Token(token_type, pos, val)
+        else: return Token(TokenType.identifier, pos, val)
+    
+    # get operator precedence of binary operator token else return 
     @staticmethod
-    def getunaryoperatorprecedence(tokentype: TokenType):
+    def getunaryoperatorprecedence(tokentype: TokenType) -> int:
         operators ={TokenType.plus: 4,
                 TokenType.minus: 4}
 
         pre = operators[tokentype] if (tokentype in operators) else 0
         return pre
-    
+
     # get operator precedence of binary operator token else return 
     @staticmethod
-    def getbinaryoperatorprecedence(tokentype: TokenType):
+    def getbinaryoperatorprecedence(tokentype: TokenType) -> int:
         operators ={TokenType.plus: 1,
                 TokenType.minus: 1,
                 TokenType.multiply: 2, 

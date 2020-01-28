@@ -57,13 +57,25 @@ steps:
   displayName: 'Modulo binary expression'
 
 - script: |
-    pytest -s --exp='35' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
-  displayName: 'Parenthesized arguments'
+    pytest -s --exp='21' --ln='2 -- 2 * 2 + 5 + 2* 5'
+  displayName: 'Complex binary arguments'
+
+# - script: |
+#     pytest -s --exp='35' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
+#   displayName: 'Parenthesized arguments'
   
-- script: |
-    pytest -s --exp='4' --ln='+1*(2^(-2*(-1)))'
-  displayName: 'Combination of all expression types'
+# - script: |
+#     pytest -s --exp='4' --ln='+1*(2^(-2*(-1)))'
+#   displayName: 'Combination of all expression types'
 
 - script: |
     pytest -s --exp='1' --ln='+--+1'
   displayName: 'Multiple unary operators on literal'
+
+- script: |
+    pytest -s --exp='True' --ln='true'
+  displayName: 'Boolean literal true'
+
+- script: |
+    pytest -s --exp='False' --ln='false
+  displayName: 'Boolean literal false'

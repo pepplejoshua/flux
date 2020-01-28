@@ -1,7 +1,8 @@
 from syntax.parser import Parser
 from syntax.tokens import *
-from expressionevaluator import ExpressionEvaluator
+from evaluator import *
 from os import name, system
+from binding.binder import *
 import sys 
 
 def entry(flag, nline, test=False, code=False):
@@ -52,12 +53,19 @@ def entry(flag, nline, test=False, code=False):
                 cprint(msg, 'red', 'on_grey')
             continue
         else:
-            # evaluate a syntactically correct tree
-            eval = ExpressionEvaluator(tree.root)
+            # TODO: study changes
+            binder = Binder()
+            bTree = binder.bindexpression(tree.root)
+            diag = parser.diagnostics + binder.diagnostics
+
+            if diag:
+                for msg in diag:
+                    cprint(msg, 'red', 'on_grey')
+                continue
+            eval = BExpressionEvaluator(bTree)
             res = eval.evaluate()
             if not test:
                 print(res)
-            
         if showtree:
             prettyprint(tree.root)
         

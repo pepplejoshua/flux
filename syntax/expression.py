@@ -1,5 +1,6 @@
 from .syntax import *
 from .tokens import *
+from typing import Tuple
 # the higher the precedence of the operator, the lower in the Tree it'll be. 
 # 1 + 2 * 3
 #      +     [2nd operation]
@@ -44,24 +45,28 @@ class Expression(SyntaxNode):
 
 # a number expression which is both an expression and an abstract syntax node
 class LiteralExpression(Expression):
-    def __init__(self, token: Token ):
+    def __init__(self, token: Token, val=None):
         self.token = token
+        if val:
+            self.value = val
+        else:
+            self.value = token.val
 
-    def nodetype(self):
-        return TokenType.literal_expr
-    
-    def getchildren(self):
-        return (self.token,)
+    def nodetype(self) -> TokenType:
+        return TokenType.literal_expr 
+
+    def getchildren(self) -> Tuple:
+        return (self.token, )
 
 class UnaryExpression(Expression):
     def __init__(self, operator: Token, operand: Expression):
         self.sign = operator
         self.operand = operand
 
-    def nodetype(self):
+    def nodetype(self) -> TokenType:
         return TokenType.unary_expr
 
-    def getchildren(self):
+    def getchildren(self) -> Tuple:
         return (self.sign, self.operand)
 
 # a number expression which is both an expression and an abstract syntax node
@@ -71,10 +76,10 @@ class BinaryExpression(Expression):
         self.oper = oper
         self.right = right
 
-    def nodetype(self):
+    def nodetype(self) -> TokenType:
         return TokenType.bin_expr
 
-    def getchildren(self):
+    def getchildren(self) -> Tuple:
         return (self.left, self.oper, self.right)
 
 # this defines the grammar for parenthesized expressions
@@ -84,7 +89,7 @@ class ParenthesizedExpression(Expression):
         self.expr = expr
         self.right_paren = right_paren
 
-    def nodetype(self):
+    def nodetype(self) -> TokenType:
         return TokenType.paren_expr
 
     def getchildren(self):

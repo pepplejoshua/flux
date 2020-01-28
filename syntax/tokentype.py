@@ -8,6 +8,9 @@ class TokenType(Enum):
     # literal tokens
     number = auto()
     identifier = auto()
+    # keywords
+    true = auto()
+    false = auto()
     # parenthesis
     open_paren = auto()
     closed_paren = auto()
