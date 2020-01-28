@@ -77,5 +77,5 @@ steps:
   displayName: 'Boolean literal true'
 
 - script: |
-    pytest -s --etype='bool' --exp='False' --ln='false
+    pytest -s --etype='bool' --exp='False' --ln='false'
   displayName: 'Boolean literal false'
