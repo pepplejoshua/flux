@@ -8,7 +8,7 @@ def eval(eq):
         return res
     
 def test_eval(ln, exp):
-        req = int(exp)
+        req = exp
         res = eval(ln)
         cprint(f"\n\nCalculation: {ln} ?= {exp}", 'green')
         cprint(f"Result[{res}] == Expected[{req}]", 'yellow')
