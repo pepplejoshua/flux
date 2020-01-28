@@ -25,57 +25,57 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    pytest -s --exp='400' --ln='400'
+    pytest -s --exp='400' --etype='int' --ln='400'
   displayName: 'Literal expression'
 
 - script: |
-    pytest -s --exp='-250' --ln='-250'
+    pytest -s --exp='-250' --etype='int' --ln='-250'
   displayName: 'Negative unary operators on literal expression'
 
 - script: |
-    pytest -s --exp='+500' --ln='+500'
+    pytest -s --exp='+500' --etype='int' --ln='+500'
   displayName: 'Positive unary operators on literal expression'
 
 - script: |
-    pytest -s --exp='16' --ln='2 ^ 4'
+    pytest -s --exp='16' --etype='int' --ln='2 ^ 4'
   displayName: 'Exponent binary expression'
 
 - script: |
-    pytest -s --exp='12' --ln='3 * 4'
+    pytest -s --exp='12' --etype='int' --ln='3 * 4'
   displayName: 'Multiplication binary expression'
 
 - script: |
-    pytest -s --exp='420' --ln='210 + 210'
+    pytest -s --exp='420' --etype='int' --ln='210 + 210'
   displayName: 'Addition binary expression'
 
 - script: |
-    pytest -s --exp='4' --ln='1000 - 996'
+    pytest -s --exp='4' --etype='int' --ln='1000 - 996'
   displayName: 'Subtraction binary expression'
 
 - script: |
-    pytest -s --exp='8' --ln='89 % 9'
+    pytest -s --exp='8' --etype='int' --ln='89 % 9'
   displayName: 'Modulo binary expression'
 
 - script: |
-    pytest -s --exp='21' --ln='2 -- 2 * 2 + 5 + 2* 5'
+    pytest -s --exp='21' --etype='int' --ln='2 -- 2 * 2 + 5 + 2* 5'
   displayName: 'Complex binary arguments'
 
 # - script: |
-#     pytest -s --exp='35' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
+#     pytest -s --exp='35' --etype='int' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
 #   displayName: 'Parenthesized arguments'
   
 # - script: |
-#     pytest -s --exp='4' --ln='+1*(2^(-2*(-1)))'
+#     pytest -s --exp='4' --etype='int' --ln='+1*(2^(-2*(-1)))'
 #   displayName: 'Combination of all expression types'
 
 - script: |
-    pytest -s --exp='1' --ln='+--+1'
+    pytest -s --etype='int' --exp='1' --ln='+--+1'
   displayName: 'Multiple unary operators on literal'
 
 - script: |
-    pytest -s --exp='True' --ln='true'
+    pytest -s --etype='bool' --exp='True' --ln='true'
   displayName: 'Boolean literal true'
 
 - script: |
-    pytest -s --exp='False' --ln='false
+    pytest -s --etype='bool' --exp='False' --ln='false
   displayName: 'Boolean literal false'
