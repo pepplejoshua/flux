@@ -11,8 +11,7 @@ def test_eval(ln, exp, etype):
         if etype == 'int':
                 req = int(exp)
         elif etype == 'bool':
-                req = bool(exp)
-        res = eval(ln)
+                req = False if exp == 'false' else True
         cprint(f"\n\nCalculation: {ln} ?= {exp}", 'green')
         cprint(f"Result[{res}] == Expected[{req}]", 'yellow')
         assert res == req
