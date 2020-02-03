@@ -41,7 +41,7 @@ class BExpressionEvaluator:
             elif root.oper.operatortype in [BBinaryOperatorType.divide, BBinaryOperatorType.modulo]:
                 if left == 0:
                     raise ZeroDivisionError()
-                return int(left) / int(right) if root.oper.operatortype == BBinaryOperatorType.divide else int(left) % int(right)
+                return int(int(left) / int(right)) if root.oper.operatortype == BBinaryOperatorType.divide else int(int(left) % int(right))
             elif root.oper.operatortype == BBinaryOperatorType.exponent:
                 return int(left) ** int(right)
             elif root.oper.operatortype == BBinaryOperatorType.log_and:
@@ -53,7 +53,7 @@ class BExpressionEvaluator:
             elif root.oper.operatortype == BBinaryOperatorType.notequal:
                 return not(left == right)
             else:
-                raise Exception(f'Unknown binary operator <{root.oper.tokentype}>')
+                raise Exception(f'Unknown binary operator <{root.oper.operatortype.name}>')
 
         else:
             raise Exception(f'Unknown node [{root.nodetype()}]')

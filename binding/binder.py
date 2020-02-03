@@ -20,6 +20,8 @@ class Binder:
             return self.bindunaryexpression(expr)
         elif expr.nodetype() == TokenType.bin_expr:
             return self.bindbinaryexpression(expr)
+        elif expr.nodetype() == TokenType.paren_expr:
+            return self.bindexpression(expr.expr)
         else: 
             raise Exception(f"Unexpected syntax {expr.nodetype()}")
 

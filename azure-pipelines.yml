@@ -60,13 +60,13 @@ steps:
     pytest -s --exp='21' --etype='int' --ln='2 -- 2 * 2 + 5 + 2* 5'
   displayName: 'Complex binary arguments'
 
-# - script: |
-#     pytest -s --exp='35' --etype='int' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
-#   displayName: 'Parenthesized arguments'
+- script: |
+    pytest -s --exp='35' --etype='int' --ln='(2 - 2) * 2 + ((5 + 2) * 5)'
+  displayName: 'Parenthesized arguments'
   
-# - script: |
-#     pytest -s --exp='4' --etype='int' --ln='+1*(2^(-2*(-1)))'
-#   displayName: 'Combination of all expression types'
+- script: |
+    pytest -s --exp='4' --etype='int' --ln='+1*(2^(-2*(-1)))'
+  displayName: 'Combination of all expression types'
 
 - script: |
     pytest -s --etype='int' --exp='1' --ln='+--+1'
@@ -79,3 +79,11 @@ steps:
 - script: |
     pytest -s --etype='bool' --exp='False' --ln='false'
   displayName: 'Boolean literal false'
+
+- script: |
+    pytest -s --etype='bool' --exp='True' --ln='1 == 1 and 2 == 2'
+  displayName: 'Complex Boolean comparator expression'
+
+- script: |
+    pytest -s --etype='bool' --exp='False' --ln='(1 == (5-4)) and (1 != 100-22)'
+  displayName: 'Parenthesized Boolean comparator expression'
