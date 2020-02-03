@@ -8,6 +8,7 @@ class BUnaryOperator:
         self.tokentype = ttype
         self.operatortype = uop_type
         self.operandtype = op_type
+        self.resulttype = res
         if not res:
             self.resulttype = op_type
 

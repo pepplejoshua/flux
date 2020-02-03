@@ -17,3 +17,5 @@ class BBinaryOperatorType(Enum):
     assignment = auto() 
     log_and = auto()
     log_or = auto()
+    notequal = auto()
+    equal = auto()

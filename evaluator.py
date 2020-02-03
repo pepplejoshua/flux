@@ -48,6 +48,10 @@ class BExpressionEvaluator:
                 return bool(left) and bool(right)
             elif root.oper.operatortype == BBinaryOperatorType.log_or:
                 return bool(left) or bool(right)
+            elif root.oper.operatortype == BBinaryOperatorType.equal:
+                return left == right
+            elif root.oper.operatortype == BBinaryOperatorType.notequal:
+                return not(left == right)
             else:
                 raise Exception(f'Unknown binary operator <{root.oper.tokentype}>')
 

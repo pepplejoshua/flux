@@ -10,8 +10,9 @@ class BBinaryOperator:
         self.tokentype = ttype
         self.operatortype = bop_type
         self.left = left
-        
-        if not res:
+        self.right = right
+        self.resulttype = res
+        if not res: 
             self.resulttype = left
         if not right:
             self.right = left
@@ -19,13 +20,18 @@ class BBinaryOperator:
     @staticmethod
     def bind(ttype: TokenType, left: type, right: type):
         operators = [BBinaryOperator(TokenType.plus, BBinaryOperatorType.plus, int), 
-                        BBinaryOperator(TokenType.minus, BBinaryOperatorType.minus, int),
-                        BBinaryOperator(TokenType.multiply, BBinaryOperatorType.multiply, int),
-                        BBinaryOperator(TokenType.divide, BBinaryOperatorType.divide, int),
-                        BBinaryOperator(TokenType.modulo, BBinaryOperatorType.modulo, int),
-                        BBinaryOperator(TokenType.exponent, BBinaryOperatorType.exponent, int),
-                        BBinaryOperator(TokenType.ampersand, BBinaryOperatorType.log_and, bool),
-                        BBinaryOperator(TokenType.pipe, BBinaryOperatorType.log_or, bool)]
+                    BBinaryOperator(TokenType.minus, BBinaryOperatorType.minus, int),
+                    BBinaryOperator(TokenType.multiply, BBinaryOperatorType.multiply, int),
+                    BBinaryOperator(TokenType.divide, BBinaryOperatorType.divide, int),
+                    BBinaryOperator(TokenType.modulo, BBinaryOperatorType.modulo, int),
+                    BBinaryOperator(TokenType.exponent, BBinaryOperatorType.exponent, int),
+                    BBinaryOperator(TokenType.ampersand, BBinaryOperatorType.log_and, bool),
+                    BBinaryOperator(TokenType.pipe, BBinaryOperatorType.log_or, bool),
+                    BBinaryOperator(TokenType.equal , BBinaryOperatorType.equal, int, int, res=bool),
+                    BBinaryOperator(TokenType.notequal , BBinaryOperatorType.notequal, int, int, res=bool),
+                    BBinaryOperator(TokenType.equal , BBinaryOperatorType.equal, bool),
+                    BBinaryOperator(TokenType.notequal , BBinaryOperatorType.notequal, bool)]
+                        
         for i in operators:
             if i.tokentype == ttype and i.left == left and i.right == right:
                 return i

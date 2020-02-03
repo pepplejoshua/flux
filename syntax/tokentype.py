@@ -26,6 +26,9 @@ class TokenType(Enum):
     pipe = auto()
     ampersand = auto()
     bang = auto()
+    #complex operators
+    notequal = auto() # bang + assignment
+    equal = auto() # assignment + assignment
     # expression tokens
     literal_expr = auto()
     unary_expr = auto()

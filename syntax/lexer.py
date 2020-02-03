@@ -87,6 +87,24 @@ class Lexer:
                     token = Token(tokentype, self.pos, '&&')
                     self.pos += 2
                     return token
+            elif tokentype is TokenType.bang:
+                if self.lookahead(1) == '=':
+                    token = Token(TokenType.notequal, self.pos, '!=')
+                    self.pos += 2
+                    return token
+                else:
+                    token = Token(TokenType.bang, self.pos, '!')
+                    self.next()
+                    return token
+            elif tokentype is TokenType.assignment:
+                if self.lookahead(1) == '=':
+                    token = Token(TokenType.equal, self.pos, '==')
+                    self.pos += 2
+                    return token
+                else:
+                    token = Token(TokenType.assignment, self.pos, '=')
+                    self.next()
+                    return token
             else:
                 token = Token(tokentype, self.pos, self.current())
                 self.next()
