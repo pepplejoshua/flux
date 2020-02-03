@@ -85,5 +85,5 @@ steps:
   displayName: 'Complex Boolean comparator expression'
 
 - script: |
-    pytest -s --etype='bool' --exp='False' --ln='(1 == (5-4)) and (1 != 100-22)'
+    pytest -s --etype='bool' --exp='True' --ln='(1 == (5-4)) and (1 != 100-22)'
   displayName: 'Parenthesized Boolean comparator expression'
