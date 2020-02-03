@@ -11,7 +11,7 @@ def entry(flag, nline, test=False, code=False):
         cprint('Flux v0.0.1', 'green')
     res = None
     showtree = False
-
+    history = []
     while True:
         # this helps with my CI testing
         # if there is a cmdline arg, exit after running the single line snippet, else
@@ -19,7 +19,12 @@ def entry(flag, nline, test=False, code=False):
         cmd = code if test else '.q'
         line = input("=> ") if not flag else cmd
         line = line if not nline else nline
-
+        
+        if line not in ('_', '.q', '.st', '.cc'):
+            history.append(line)
+        elif line == '_':
+            line = history[-1]
+            cprint(f"executing {line}", 'yellow')
         # user requested exit 
         if line == '.q':
             if not test:

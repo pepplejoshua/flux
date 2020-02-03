@@ -8,10 +8,19 @@ class Helper:
                 '/': TokenType.divide, 
                 '=': TokenType.assignment, 
                 '%': TokenType.modulo,
-                '^': TokenType.exponent}
+                '^': TokenType.exponent,
+                '|': TokenType.pipe,
+                '&': TokenType.ampersand, 
+                '!': TokenType.bang}
 
     keywords = {'true': TokenType.true,
     'false': TokenType.false}
+    
+    wordoperators = {
+        'not': TokenType.bang,
+        'and': TokenType.ampersand,
+        'or': TokenType.pipe
+    }
 
     def isoperator(self, val: str) -> bool:
         """Check if val is an operator"""
@@ -21,15 +30,19 @@ class Helper:
         """Check if val is either open or closed parenthesis"""
         return val in ['(', ')']
 
+    def iswordoperator(self, val: str) -> bool:
+        return val in self.wordoperators
+
     def iskeyword(self, val: str) -> bool:
         """Check if val is a reserved language identifier"""
         return val in self.keywords
-
-    def getoperatortoken(self, val: str, pos: int) -> Token:
-        """This takes an operator and returns the appropriate token type"""
-        token_type = self.operators[val]
-        if token_type: return Token(token_type, pos, val)
     
+    def getoperatortokentype(self, val: chr) -> TokenType:
+        """This takes an operator and returns the appropriate token type"""
+        if val in self.operators: return self.operators[val]
+        elif val in self.wordoperators:
+            return self.wordoperators[val]
+
     # get operator precedence of binary operator token else return 
     def getkeywordtoken(self, val: str, pos: int) -> Token:
         token_type = self.keywords[val] if (val in self.keywords) else 0
@@ -40,8 +53,9 @@ class Helper:
     # get operator precedence of binary operator token else return 
     @staticmethod
     def getunaryoperatorprecedence(tokentype: TokenType) -> int:
-        operators ={TokenType.plus: 4,
-                TokenType.minus: 4}
+        operators ={TokenType.plus: 6,
+                TokenType.minus: 6, 
+                TokenType.bang: 6}
 
         pre = operators[tokentype] if (tokentype in operators) else 0
         return pre
@@ -49,12 +63,14 @@ class Helper:
     # get operator precedence of binary operator token else return 
     @staticmethod
     def getbinaryoperatorprecedence(tokentype: TokenType) -> int:
-        operators ={TokenType.plus: 1,
-                TokenType.minus: 1,
-                TokenType.multiply: 2, 
-                TokenType.divide: 2, 
-                TokenType.modulo: 2,
-                TokenType.exponent: 3}
+        operators ={TokenType.pipe: 1,
+                TokenType.ampersand: 2,
+                TokenType.plus: 3,
+                TokenType.minus: 3,
+                TokenType.multiply: 4, 
+                TokenType.divide: 4, 
+                TokenType.modulo: 4,
+                TokenType.exponent: 5}
 
         pre = operators[tokentype] if (tokentype in operators) else 0
         return pre

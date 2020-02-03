@@ -8,10 +8,14 @@ class Lexer:
         self.diagnostics = []
     
     def current(self) -> chr:
+        return self.lookahead(0)
+    
+    def lookahead(self, offset: int) -> chr:
         # lexing complete condition
-        if self.pos >= len(self.input):
+        pos = offset + self.pos 
+        if pos >= len(self.input):
             return '\0'
-        return self.input[self.pos]
+        return self.input[pos]
 
     def next(self):
         # advance current input position by 1
@@ -31,8 +35,11 @@ class Lexer:
                 self.next()
 
             sbstr = self.input[strt:self.pos]
-            # check if the substring is a reserved identifier
-            if self.helper.iskeyword(sbstr):
+            # check if the substring is a reserved operator in word form (or, and, not)
+            if self.helper.iswordoperator(sbstr):
+                ttype = self.helper.getoperatortokentype(sbstr)
+                token = Token(ttype, self.pos, sbstr)
+            elif self.helper.iskeyword(sbstr):
                 token = self.helper.getkeywordtoken(sbstr, strt)
             else:
                 self.diagnostics.append(f'ERROR: Unknown identifier [{sbstr}]')
@@ -70,9 +77,20 @@ class Lexer:
 
         elif self.helper.isoperator(self.current()):
             # checking for operators
-            token = self.helper.getoperatortoken(self.current(), self.pos)
-            self.next()
-            return token
+            tokentype = self.helper.getoperatortokentype(self.current())
+            if tokentype in (TokenType.ampersand, TokenType.pipe):
+                if self.lookahead(1) == '|':
+                    token = Token(tokentype, self.pos, '||')
+                    self.pos += 2
+                    return token
+                elif self.lookahead(1) == '&':
+                    token = Token(tokentype, self.pos, '&&')
+                    self.pos += 2
+                    return token
+            else:
+                token = Token(tokentype, self.pos, self.current())
+                self.next()
+                return token
 
         elif self.helper.isparenthesis(self.current()):
             # checking for parenthesis

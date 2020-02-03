@@ -22,6 +22,10 @@ class TokenType(Enum):
     modulo = auto()
     exponent = auto()
     assignment = auto()
+    # bool operators
+    pipe = auto()
+    ampersand = auto()
+    bang = auto()
     # expression tokens
     literal_expr = auto()
     unary_expr = auto()

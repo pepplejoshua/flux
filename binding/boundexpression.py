@@ -1,5 +1,6 @@
 from enum import Enum, auto
-from .boundoperatortypes import *
+from .bbinaryoperator import BBinaryOperator
+from .bunaryoperator import BUnaryOperator
 from .boundnode import BoundNode
 from abc import abstractmethod
 
@@ -26,11 +27,11 @@ class BLiteralExpression(BExpression):
     
     # this is the actual typing used for type checking.
     # this is the type that the expression results to
-    def type(self):
+    def type(self) -> type:
         return type(self.value)
 
 class BUnaryExpression(BExpression):
-    def __init__(self, oper: BUnaryOperatorType, operand: BExpression):
+    def __init__(self, oper: BUnaryOperator, operand: BExpression):
         self.sign = oper
         self.operand = operand
     
@@ -39,12 +40,12 @@ class BUnaryExpression(BExpression):
         return BNodeType.bUnary_expr
     
     # this is the actual typing used for type checking
-    # this is the type that the expression results to+
-    def type(self):
-        return self.operand.type()
-
+    # this is the type that the expression results to, hence should be the actual operator's type
+    def type(self) -> type:
+        return self.sign.resulttype
+        
 class BBinaryExpression(BExpression):
-    def __init__(self, left: BExpression, oper: BBinaryOperatorType, right: BExpression):
+    def __init__(self, left: BExpression, oper: BBinaryOperator, right: BExpression):
         self.left = left
         self.oper = oper
         self.right = right
@@ -55,5 +56,5 @@ class BBinaryExpression(BExpression):
     
     # this is the actual typing used for type checking
     # this is the type that the expression results to
-    def type(self):
-        return self.left.type()
+    def type(self) -> type:
+        return self.oper.resulttype

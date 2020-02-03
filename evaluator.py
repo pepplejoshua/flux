@@ -1,4 +1,6 @@
 from binding.boundexpression import *
+from binding.boundoperatortypes import *
+
 # this recursively traverses a bound tree[SyntaxTree] and returns a result
 class BExpressionEvaluator:
     def __init__(self, rootExpr: BExpression):
@@ -16,32 +18,38 @@ class BExpressionEvaluator:
 
         elif isinstance(root, BUnaryExpression):
             sign = root.sign
-            oper = int(self.evaluateexpression(root.operand))
+            oper = self.evaluateexpression(root.operand)
 
-            if sign == BUnaryOperatorType.identity:
-                return oper
+            if sign.operatortype == BUnaryOperatorType.identity:
+                return int(oper)
             elif sign == BUnaryOperatorType.negate:
-                return -oper
+                return -int(oper)
+            elif sign == BUnaryOperatorType.log_negate:
+                return not bool(oper)
             else: raise Exception(f'Unknown unary operator <{root.oper.tokentype.name}>')
 
-        elif isinstance(root, BBinaryExpression):
-            left = int(self.evaluateexpression(root.left))
-            right = int(self.evaluateexpression(root.right))
-
-            if root.oper == BBinaryOperatorType.plus:
-                return left + right
-            elif root.oper == BBinaryOperatorType.minus:
-                return left - right
-            elif root.oper == BBinaryOperatorType.multiply:
-                return left * right
-            elif root.oper in [BBinaryOperatorType.divide, BBinaryOperatorType.modulo]:
+        elif isinstance(root, BBinaryExpression): 
+            left = self.evaluateexpression(root.left)
+            right = self.evaluateexpression(root.right)
+            
+            if root.oper.operatortype == BBinaryOperatorType.plus:
+                return int(left) + int(right)
+            elif root.oper.operatortype == BBinaryOperatorType.minus:
+                return int(left) - int(right)
+            elif root.oper.operatortype == BBinaryOperatorType.multiply:
+                return int(left) * int(right)
+            elif root.oper.operatortype in [BBinaryOperatorType.divide, BBinaryOperatorType.modulo]:
                 if left == 0:
                     raise ZeroDivisionError()
-                return left / right if root.oper == BBinaryOperatorType.divide else left % right
-            elif root.oper == BBinaryOperatorType.exponent:
-                return left ** right
+                return int(left) / int(right) if root.oper.operatortype == BBinaryOperatorType.divide else int(left) % int(right)
+            elif root.oper.operatortype == BBinaryOperatorType.exponent:
+                return int(left) ** int(right)
+            elif root.oper.operatortype == BBinaryOperatorType.log_and:
+                return bool(left) and bool(right)
+            elif root.oper.operatortype == BBinaryOperatorType.log_or:
+                return bool(left) or bool(right)
             else:
-                raise Exception(f'Unknown binary operator <{root.oper.name}>')
+                raise Exception(f'Unknown binary operator <{root.oper.tokentype}>')
 
         else:
             raise Exception(f'Unknown node [{root.nodetype()}]')
