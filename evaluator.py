@@ -22,11 +22,11 @@ class BExpressionEvaluator:
 
             if sign.operatortype == BUnaryOperatorType.identity:
                 return int(oper)
-            elif sign == BUnaryOperatorType.negate:
+            elif sign.operatortype == BUnaryOperatorType.negate:
                 return -int(oper)
-            elif sign == BUnaryOperatorType.log_negate:
+            elif sign.operatortype == BUnaryOperatorType.log_negate:
                 return not bool(oper)
-            else: raise Exception(f'Unknown unary operator <{root.oper.tokentype.name}>')
+            else: raise Exception(f'Unknown unary operator <{root.sign.operatortype.name}>')
 
         elif isinstance(root, BBinaryExpression): 
             left = self.evaluateexpression(root.left)
