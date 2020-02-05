@@ -13,7 +13,7 @@ class SyntaxNode(ABC):
 # a syntax tree class which is just a class containing a root to attached ASyntaxNode(s)
 class SyntaxTree:
     def __init__(self, diagnostic: [], root: SyntaxNode, eof_token):
-        self.diag = diagnostic
+        self.diagnostics = diagnostic
         self.root = root
         self.eof = eof_token
 

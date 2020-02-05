@@ -1,6 +1,7 @@
 from binding.boundexpression import *
 from binding.boundoperatortypes import *
 
+
 # this recursively traverses a bound tree[SyntaxTree] and returns a result
 class BExpressionEvaluator:
     def __init__(self, rootExpr: BExpression):

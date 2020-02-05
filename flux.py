@@ -4,7 +4,7 @@ from evaluator import *
 from os import name, system
 from binding.binder import *
 import sys 
-
+from compilation import *
 def entry(flag, nline, test=False, code=False):
     # get single line and then tokenize repeatedly > repl
     if not test:
@@ -58,19 +58,19 @@ def entry(flag, nline, test=False, code=False):
                 cprint(msg, 'red', 'on_grey')
             continue
         else:
-            # TODO: study changes
-            binder = Binder()
-            bTree = binder.bindexpression(tree.root)
-            diag = parser.diagnostics + binder.diagnostics
-
+            # TODO: change to use Compilation and EvaluateResult
+            # compilation(SynTree)
+            comp = Compilation(tree)
+            result = comp.evaluate()
+            diag = result.diagnostics
+            res = result.value
             if diag:
                 for msg in diag:
                     cprint(msg, 'red', 'on_grey')
                 continue
-            eval = BExpressionEvaluator(bTree)
-            res = eval.evaluate()
             if not test:
                 print(res)
+
         if showtree:
             prettyprint(tree.root)
         
