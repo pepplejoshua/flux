@@ -1,11 +1,15 @@
 from .tokens import * # contains Token, TokenType
 from .helper import Helper
+import sys
+sys.path.append('..')
+from textspan import *
+
 class Lexer:
     def __init__(self, input: str):
         self.input = input
         self.pos = 0
         self.helper = Helper()
-        self.diagnostics = []
+        self.Diagnostics = Diagnostics()
     
     def current(self) -> chr:
         return self.lookahead(0)
@@ -42,7 +46,7 @@ class Lexer:
             elif self.helper.iskeyword(sbstr):
                 token = self.helper.getkeywordtoken(sbstr, strt)
             else:
-                self.diagnostics.append(f'ERROR: Unknown identifier [{sbstr}]')
+                self.Diagnostics.report(TextSpan(strt, self.pos-strt), f'ERROR: Unknown identifier [{sbstr}]')
                 token = Token(TokenType.bad_token, strt, sbstr)
             return token
 
@@ -60,7 +64,7 @@ class Lexer:
             try:
                 sbstr = int(sbstr)
             except ValueError:
-                self.diagnostics.append(f'ERROR: [{sbstr}] isn\'t a valid number')
+                self.Diagnostics.reportinvalidnumber(TextSpan(strt, self.pos-strt),sbstr, int)
 
             token = Token(TokenType.number, strt, sbstr)
             return token
@@ -120,6 +124,6 @@ class Lexer:
           
         elif self.current() != '\0':
             # this should handle all unhandled cases and returns a bad token
-            self.diagnostics.append(f'Bad character entered [{self.current()}]')
+            self.Diagnostics.report(TextSpan(strt, self.pos-strt), f'Bad character entered [{self.current()}]')
             token = Token(TokenType.bad_token, self.pos, self.current())
             return token

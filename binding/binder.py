@@ -6,11 +6,11 @@ from .boundexpression import *
 from .bbinaryoperator import *
 from .bunaryoperator import *
 from syntax.tokentype import TokenType
-
+from textspan import *
 class Binder:
     def __init__(self):
+        self.Diagnostics = Diagnostics()
         self.diagnostics = []
-
     # entry point for recursion, similar to parser structure
     # depending on Expression type, we bind differently
     def bindexpression(self, expr: Expression) -> BExpression:
@@ -42,6 +42,7 @@ class Binder:
         b_sign = BUnaryOperator.bind(expr.sign.tokentype, b_operand.type())
         if not b_sign:
             self.diagnostics.append(f"Unary operator {expr.sign.val} not defined for type {b_operand.type()}.")
+            self.Diagnostics.report()
             return b_operand
         return BUnaryExpression(b_sign, b_operand)
 

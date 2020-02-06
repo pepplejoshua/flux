@@ -47,26 +47,26 @@ def entry(flag, nline, test=False, code=False):
         parser = Parser(line)
         # handle any lexing errors
         if parser.error:
-            for msg in parser.diagnostics:
-                cprint(msg, 'red', 'on_grey')
+            for msg in parser.Diagnostics.diagnostics:
+                cprint(msg.tostring(), 'red', 'on_grey')
             continue
         # parse the tokens and build a tree
         tree = parser.parse()
         # handle any parsing errors
         if parser.error:
-            for msg in parser.diagnostics:
-                cprint(msg, 'red', 'on_grey')
+            for msg in parser.Diagnostics.diagnostics:
+                cprint(msg.tostring(), 'red', 'on_grey')
             continue
         else:
             # TODO: change to use Compilation and EvaluateResult
             # compilation(SynTree)
             comp = Compilation(tree)
             result = comp.evaluate()
-            diag = result.diagnostics
+            diag = result.Diagnostics.diagnostics
             res = result.value
             if diag:
                 for msg in diag:
-                    cprint(msg, 'red', 'on_grey')
+                    cprint(msg.tostring(), 'red', 'on_grey')
                 continue
             if not test:
                 print(res)
