@@ -47,14 +47,14 @@ def entry(flag, nline, test=False, code=False):
         parser = Parser(line)
         # handle any lexing errors
         if parser.error:
-            for msg in parser.Diagnostics.diagnostics:
+            for msg in parser.diagnostics.information:
                 cprint(msg.tostring(), 'red', 'on_grey')
             continue
         # parse the tokens and build a tree
         tree = parser.parse()
         # handle any parsing errors
         if parser.error:
-            for msg in parser.Diagnostics.diagnostics:
+            for msg in parser.diagnostics.information:
                 cprint(msg.tostring(), 'red', 'on_grey')
             continue
         else:
@@ -62,7 +62,7 @@ def entry(flag, nline, test=False, code=False):
             # compilation(SynTree)
             comp = Compilation(tree)
             result = comp.evaluate()
-            diag = result.Diagnostics.diagnostics
+            diag = result.diagnostics.information
             res = result.value
             if diag:
                 for msg in diag:

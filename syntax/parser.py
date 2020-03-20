@@ -5,6 +5,7 @@ from .expression import *
 import sys
 sys.path.append('..')
 from textspan import *
+from diagnostics import DiagnosticsBag
 
 # a recursive descent parser (idk what that means atm)
 class Parser: 
@@ -14,7 +15,7 @@ class Parser:
         self.pos = 0
         lexer = Lexer(input)
         self.tokens = []
-        self.Diagnostics = Diagnostics()
+        self.diagnostics = DiagnosticsBag()
         token = lexer.lex()
         
         # continue to tokenize input until eof is seen, the repl has received an exit command or a bad_token is read
@@ -26,7 +27,7 @@ class Parser:
                 break
             token = lexer.lex()
         if self.error:
-            self.Diagnostics.append(lexer.Diagnostics)
+            self.diagnostics.append(lexer.diagnostics)
             return
         elif token.tokentype.name == 'eof': self.tokens.append(token)
 
@@ -57,7 +58,7 @@ class Parser:
                 return self.nexttoken()
             else:
                 # tell user about unexpected token and what token was expected in that position
-                self.Diagnostics.report(self.current.span(), f'ERROR: Unexpected token <{self.current().tokentype}>. Expected <{token_type}>')
+                self.diagnostics.reportunexpectedtoken(self.current.span(), self.current().tokentype, token_type)
                 self.error = True
                 return Token(token_type, self.current().pos)
 
@@ -67,7 +68,7 @@ class Parser:
         # this is the main call. 
         expr = self.parseexpression()
         eof_token = self.match(TokenType.eof)
-        return SyntaxTree(self.Diagnostics, expr, eof_token)
+        return SyntaxTree(self.diagnostics, expr, eof_token)
 
     # this parses the tree by assuming (TODO: rethink and rewrite):
     # token 1 & 3 = operand

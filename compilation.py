@@ -1,7 +1,7 @@
 from binding.binder import Binder
 from syntax.syntax import SyntaxTree
 from evaluator import BExpressionEvaluator
-
+from diagnostics import DiagnosticsBag
 class Compilation:
     def __init__(self, tree: SyntaxTree):
         self.tree = tree
@@ -13,7 +13,7 @@ class Compilation:
         eval = BExpressionEvaluator(b_expr)
         res = eval.evaluate()
         if diag: return EvaluationResult(diag, None)
-        return EvaluationResult([], res)
+        return EvaluationResult(DiagnosticsBag(), res)
 
 class EvaluationResult:
     def __init__(self, diag: [], value):
