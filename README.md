@@ -132,4 +132,51 @@ displaying syntax tree
         └──CLOSED_PAREN [)]
 => .q
 Arigatōgozaimashita!
+
+=> true and false
+False
+
+=> false || true
+True
+
+=> (1 == (5-4)) and (1 != 100-22) || false
+True
+└──BIN_EXPR
+    ├──BIN_EXPR
+    │   ├──PAREN_EXPR
+    │   │   ├──OPEN_PAREN [(]
+    │   │   ├──BIN_EXPR
+    │   │   │   ├──LITERAL_EXPR
+    │   │   │   │   └──NUMBER [1]
+    │   │   │   ├──EQUAL [==]
+    │   │   │   └──PAREN_EXPR
+    │   │   │       ├──OPEN_PAREN [(]
+    │   │   │       ├──BIN_EXPR
+    │   │   │       │   ├──LITERAL_EXPR
+    │   │   │       │   │   └──NUMBER [5]
+    │   │   │       │   ├──MINUS [-]
+    │   │   │       │   └──LITERAL_EXPR
+    │   │   │       │       └──NUMBER [4]
+    │   │   │       └──CLOSED_PAREN [)]
+    │   │   └──CLOSED_PAREN [)]
+    │   ├──AMPERSAND [and]
+    │   └──PAREN_EXPR
+    │       ├──OPEN_PAREN [(]
+    │       ├──BIN_EXPR
+    │       │   ├──LITERAL_EXPR
+    │       │   │   └──NUMBER [1]
+    │       │   ├──NOTEQUAL [!=]
+    │       │   └──BIN_EXPR
+    │       │       ├──LITERAL_EXPR
+    │       │       │   └──NUMBER [100]
+    │       │       ├──MINUS [-]
+    │       │       └──LITERAL_EXPR
+    │       │           └──NUMBER [22]
+    │       └──CLOSED_PAREN [)]
+    ├──PIPE [||]
+    └──LITERAL_EXPR
+        └──FALSE [False]
+
+=> abcsdcdfvsdvscd
+0:15 >> ERROR: Unknown identifier [abcsdcdfvsdvscd]
 ```
