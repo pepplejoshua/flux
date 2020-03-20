@@ -18,14 +18,15 @@ class Parser:
         self.diagnostics = DiagnosticsBag()
         token = lexer.lex()
         
+        if token.tokentype.name != 'eof':
         # continue to tokenize input until eof is seen, the repl has received an exit command or a bad_token is read
-        while token.tokentype.name != 'eof':
-            if (token.tokentype not in [TokenType.bad_token, TokenType.space]):
-                self.tokens.append(token)
-            elif token.tokentype is TokenType.bad_token:
-                self.error = True
-                break
-            token = lexer.lex()
+            while token.tokentype.name != 'eof':
+                if (token.tokentype not in [TokenType.bad_token, TokenType.space]):
+                    self.tokens.append(token)
+                elif token.tokentype is TokenType.bad_token:
+                    self.error = True
+                    break
+                token = lexer.lex()
         if self.error:
             self.diagnostics.append(lexer.diagnostics)
             return
@@ -58,7 +59,7 @@ class Parser:
                 return self.nexttoken()
             else:
                 # tell user about unexpected token and what token was expected in that position
-                self.diagnostics.reportunexpectedtoken(self.current.span(), self.current().tokentype, token_type)
+                self.diagnostics.reportunexpectedtoken(self.current().span(), self.current().tokentype, token_type)
                 self.error = True
                 return Token(token_type, self.current().pos)
 

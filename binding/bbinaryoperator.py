@@ -31,7 +31,8 @@ class BBinaryOperator:
                     BBinaryOperator(TokenType.notequal , BBinaryOperatorType.notequal, int, int, res=bool),
                     BBinaryOperator(TokenType.equal , BBinaryOperatorType.equal, bool),
                     BBinaryOperator(TokenType.notequal , BBinaryOperatorType.notequal, bool)]
-                        
+
+        
         for i in operators:
             if i.tokentype == ttype and i.left == left and i.right == right:
                 return i

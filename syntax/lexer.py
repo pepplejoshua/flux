@@ -29,8 +29,8 @@ class Lexer:
     def lex(self) -> Token:
         # number, parenthesis, operators, whitespace
         
-        if self.pos+1 > len(self.input):
-            return Token(TokenType.eof, self.pos)
+        if self.pos >= len(self.input):
+            return Token(TokenType.eof, self.pos, '\0')
         
         if(str.isalpha(self.current())):
             # compute the range of the identifier [alphabets only]
@@ -43,11 +43,11 @@ class Lexer:
             # check if the substring is a reserved operator in word form (or, and, not)
             if self.helper.iswordoperator(sbstr):
                 ttype = self.helper.getoperatortokentype(sbstr)
-                token = Token(ttype, self.pos, sbstr)
+                token = Token(ttype, strt, sbstr)
             elif self.helper.iskeyword(sbstr):
                 token = self.helper.getkeywordtoken(sbstr, strt)
             else:
-                self.diagnostics.report(TextSpan(strt, self.pos-strt), f'ERROR: Unknown identifier [{sbstr}]')
+                self.diagnostics.reportunknownidentifier(TextSpan(strt, self.pos-strt), sbstr)
                 token = Token(TokenType.bad_token, strt, sbstr)
             return token
 

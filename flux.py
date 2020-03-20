@@ -43,7 +43,9 @@ def entry(flag, nline, test=False, code=False):
             _ = system(command)
             cprint('Flux v0.0.1', 'green')
             continue
- 
+        # if line == '':
+        #     continue
+            
         parser = Parser(line)
         # handle any lexing errors
         if parser.error:
@@ -62,10 +64,10 @@ def entry(flag, nline, test=False, code=False):
             # compilation(SynTree)
             comp = Compilation(tree)
             result = comp.evaluate()
-            diag = result.diagnostics.information
+            diag = result.diagnostics
             res = result.value
             if diag:
-                for msg in diag:
+                for msg in diag[::-1]:
                     cprint(msg.tostring(), 'red', 'on_grey')
                 continue
             if not test:
