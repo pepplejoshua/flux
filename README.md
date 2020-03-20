@@ -130,8 +130,6 @@ displaying syntax tree
         │       │       └──CLOSED_PAREN [)]
         │       └──CLOSED_PAREN [)]
         └──CLOSED_PAREN [)]
-=> .q
-Arigatōgozaimashita!
 
 => true and false
 False
@@ -179,4 +177,7 @@ True
 
 => abcsdcdfvsdvscd
 0:15 >> ERROR: Unknown identifier [abcsdcdfvsdvscd]
+
+=> .q
+Arigatōgozaimashita!
 ```
