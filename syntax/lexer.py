@@ -49,6 +49,7 @@ class Lexer:
             else:
                 self.diagnostics.reportunknownidentifier(TextSpan(strt, self.pos-strt), sbstr)
                 token = Token(TokenType.bad_token, strt, sbstr)
+                token = Token(TokenType.identifier, strt, sbstr)
             return token
 
 

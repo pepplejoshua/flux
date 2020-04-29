@@ -7,8 +7,14 @@ class Diagnostic:
         self.message = msg
 
     def tostring(self) -> str:
-        return f"{self.textspan.start+1}:{self.textspan.end} >> {self.message}"
-        
+        return f"{self.spantostring()} -> {self.errortostring()}"
+    
+    def spantostring(self) -> str:
+        return f"{self.textspan.start+1}:{self.textspan.end}"
+
+    def errortostring(self) -> str:
+        return f"{self.message}"
+
 class DiagnosticsBag:
     def __init__(self):
         self.information = []

@@ -67,9 +67,20 @@ class Parser:
     # like numbers and basic literals
     def parse(self) -> SyntaxTree:
         # this is the main call. 
-        expr = self.parseexpression()
+        expr = self.beginparse()
+        if self.error:
+            return SyntaxTree(self.diagnostics, None, Token(TokenType.eof, len(self.tokens)), True)
         eof_token = self.match(TokenType.eof)
         return SyntaxTree(self.diagnostics, expr, eof_token)
+
+    def beginparse(self) -> Expression:
+        if self.error:
+            return None
+        return self.parseexpression()
+
+    def parseassignmentexpression(self) -> Expression:
+        #if self.lookahead(0).nodetype() == TokenType.identifier
+        pass
 
     # this parses the tree by assuming (TODO: rethink and rewrite):
     # token 1 & 3 = operand
@@ -90,7 +101,7 @@ class Parser:
         else:
             left = self.parseprimaryexpression()
         # you can choose to handle post-fix cases in between unary ops and regular ops
-        while True:
+        while not self.error:
             precedence = Helper.getbinaryoperatorprecedence(self.current().nodetype())
             if precedence == 0 or precedence <= parentprecendece:
                 break
@@ -108,6 +119,7 @@ class Parser:
             right = self.match(TokenType.closed_paren)
             return ParenthesizedExpression(left, expr, right)
 
+        # Literals are currently: BOOL and INTEGERS
         elif self.current().tokentype in (TokenType.true, TokenType.false):
             keyword = self.current()
             val = True if self.nexttoken().tokentype == TokenType.true else False # t is t and f otherwise

@@ -31,6 +31,8 @@ class TokenType(Enum):
     equal = auto() # assignment + assignment
     # expression tokens
     literal_expr = auto()
+    name_expr = auto()
+    assignment_expr = auto()
     unary_expr = auto()
     bin_expr = auto()
     paren_expr = auto()

@@ -7,6 +7,9 @@ class Compilation:
         self.tree = tree
     
     def evaluate(self):
+        if self.tree.error:
+            diag = self.tree.diagnostics.information
+            return EvaluationResult(diag, None)
         binder = Binder()
         b_expr = binder.bindexpression(self.tree.root)
         diag = self.tree.diagnostics.information + binder.diagnostics.information

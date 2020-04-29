@@ -16,10 +16,18 @@ class SyntaxNode(ABC):
 
 # a syntax tree class which is just a class containing a root to attached ASyntaxNode(s)
 class SyntaxTree:
-    def __init__(self, diagnostics: DiagnosticsBag, root: SyntaxNode, eof_token):
+    def __init__(self, diagnostics: DiagnosticsBag, root: SyntaxNode, eof_token, error=False):
         self.diagnostics = diagnostics
         self.root = root
         self.eof = eof_token
+        self.error = error
+
+    @staticmethod
+    def parse(line: str): 
+        from .parser import Parser
+        parser = Parser(line)
+        return parser.parse()
+
 
 
 # this is my original tree evaluator (unbound tree)

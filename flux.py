@@ -43,35 +43,29 @@ def entry(flag, nline, test=False, code=False):
             _ = system(command)
             cprint('Flux v0.0.1', 'green')
             continue
-        # if line == '':
-        #     continue
-            
-        parser = Parser(line)
-        # handle any lexing errors
-        if parser.error:
-            for msg in parser.diagnostics.information:
-                cprint(msg.tostring(), 'red', 'on_grey')
-            continue
-        # parse the tokens and build a tree
-        tree = parser.parse()
+
+        tree = SyntaxTree.parse(line)
         # handle any parsing errors
-        if parser.error:
-            for msg in parser.diagnostics.information:
-                cprint(msg.tostring(), 'red', 'on_grey')
+        
+        comp = Compilation(tree)
+        result = comp.evaluate()
+        diag = result.diagnostics
+        res = result.value
+        if diag:
+            for msg in diag[::-1]:
+                print(msg.spantostring(), sep='',end=' -> ')
+                cprint(msg.errortostring(), 'yellow')
+                prefx = line[0:msg.textspan.start]
+                err = line[msg.textspan.start: msg.textspan.end]
+                suffx = line[msg.textspan.end:]
+                
+                print('  '+prefx, end='')
+                cprint(err, 'red', 'on_grey', end='')
+                print(suffx, end='\n\n')
             continue
-        else:
-            # TODO: change to use Compilation and EvaluateResult
-            # compilation(SynTree)
-            comp = Compilation(tree)
-            result = comp.evaluate()
-            diag = result.diagnostics
-            res = result.value
-            if diag:
-                for msg in diag[::-1]:
-                    cprint(msg.tostring(), 'red', 'on_grey')
-                continue
-            if not test:
-                print(res)
+
+        if not test:
+            print(res)
 
         if showtree:
             prettyprint(tree.root)

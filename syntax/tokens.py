@@ -1,5 +1,5 @@
 from termcolor import cprint
-from .syntax import SyntaxNode
+from .syntax import SyntaxNode, SyntaxTree
 from .tokentype import TokenType
 from typing import Tuple
 import sys

@@ -37,13 +37,33 @@ from typing import Tuple
 #    1      (right due to normal mathematic operators parsing, unary - is ranked stronger than binary *)
 # the lower an operand on the tree, the stronger the precedence.
 
+# the case for assignment is different because, instead of starting binding from the left as with +, - and other operators,
+# it binds from the right
+# a = b = 5
+#
+# if binded from the left, the tree is:
+#        =
+#       / \
+#      =   5
+#     / \
+#    a   b  this no sense as you will assign a to b and then b to 5
+#
+#  if binding from the right correctly, the tree is: 
+#      =   
+#     / \
+#    a   =  
+#       / \
+#      b   5  5 is assigned to b and then b is assigned to a, as should be.
+
+
+
 # a base expression syntax abstract class which is of type ASyntax node
 # an Expression is a node in the syntax tree
 # a complex node which could be composed of tokens or other Expression types
 class Expression(SyntaxNode):
     pass
 
-# a number expression which is both an expression and an abstract syntax node
+
 class LiteralExpression(Expression):
     def __init__(self, token: Token, val=None):
         self.token = token
@@ -58,6 +78,7 @@ class LiteralExpression(Expression):
     def getchildren(self) -> Tuple:
         return (self.token, )
 
+
 class UnaryExpression(Expression):
     def __init__(self, operator: Token, operand: Expression):
         self.sign = operator
@@ -69,7 +90,31 @@ class UnaryExpression(Expression):
     def getchildren(self) -> Tuple:
         return (self.sign, self.operand)
 
-# a number expression which is both an expression and an abstract syntax node
+
+class NameExpression(Expression):
+    def __init__(self, identifier: Token):
+        self.identifier = identifier
+
+    def nodetype(self) -> TokenType:
+        return TokenType.name_expr
+
+    def getchildren(self) -> Tuple:
+        return (self.identifier, )
+
+
+class AssignmentExpression(Expression):
+    def __init__(self, identifier: Token, equals: Token, expr: Expression):
+        self.identifier = identifier
+        self.oper = equals
+        self.expr = expr
+
+    def nodetype(self) -> TokenType:
+        return TokenType.assignment_expr
+
+    def getchildren(self) -> Tuple:
+        return (self.identifier, self.equals, self.expr)
+
+
 class BinaryExpression(Expression):
     def __init__(self, left: Expression, oper: Token, right: Expression):
         self.left = left
@@ -81,6 +126,7 @@ class BinaryExpression(Expression):
 
     def getchildren(self) -> Tuple:
         return (self.left, self.oper, self.right)
+
 
 # this defines the grammar for parenthesized expressions
 class ParenthesizedExpression(Expression):

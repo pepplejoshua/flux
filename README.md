@@ -2,6 +2,15 @@
 
 [![Build Status](https://dev.azure.com/pepplejoshua/office/_apis/build/status/pepplejoshua.flux?branchName=master)](https://dev.azure.com/pepplejoshua/office/_build/latest?definitionId=1&branchName=master)
 
+## installation:
+Commands:
+```
+pip install pyinstaller
+pyinstaller --onefile flux.py
+```
+This use of pyinstaller is to create an executable from python files.
+The executable is located at /dist/flux in your current folder. 
+
 ## nuggets:
 - use type(i) to get the base type of a variable i
 - using isinstance(x, Y) does you one better and tells you if x is an instance of Y class
