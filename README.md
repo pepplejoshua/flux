@@ -35,7 +35,7 @@ not displaying syntax tree
 => .q
 Arigatōgozaimashita!
 ```
-> **Note:** _.cc_ command clears the terminal of previous inputs
+> **Note:** ".cc" interpreter command clears the terminal window.
 
 **syntax examples:**
 ```
@@ -185,7 +185,23 @@ True
         └──FALSE [False]
 
 => abcsdcdfvsdvscd
-0:15 >> ERROR: Unknown identifier [abcsdcdfvsdvscd]
+1:15 -> Unexpected token <TokenType.identifier>. Expected **<TokenType.number>**.
+  abcsdcdfvsdvscd
+
+=> *true
+1:1 -> Unexpected token <TokenType.multiply>. Expected <TokenType.number>
+  *true
+
+=> +true
+1:1 -> Unary operator '+' not defined for type <class 'bool'>.
+  +true
+
+=> +1
+1
+└──UNARY_EXPR
+    ├──PLUS [+]
+    └──LITERAL_EXPR
+        └──NUMBER [1]
 
 => .q
 Arigatōgozaimashita!
