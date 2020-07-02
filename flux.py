@@ -3,8 +3,10 @@ from syntax.tokens import *
 from evaluator import *
 from os import name, system
 from binding.binder import *
+from binding.boundexpression import *
 import sys 
 from compilation import *
+
 def entry(flag, nline, test=False, code=False):
     # get single line and then tokenize repeatedly > repl
     if not test:
@@ -52,6 +54,7 @@ def entry(flag, nline, test=False, code=False):
         diag = result.diagnostics
         res = result.value
         if diag:
+            print()
             for msg in diag[::-1]:
                 print(msg.spantostring(), sep='',end=' -> ')
                 cprint(msg.errortostring(), 'yellow')
@@ -64,15 +67,54 @@ def entry(flag, nline, test=False, code=False):
                 print(suffx, end='\n\n')
             continue
 
-        if not test:
-            print(res)
-
         if showtree:
+            print(res)
+            cprint('binder information..', 'yellow')
+            binderinfo(result.boundExpr)
+            print()
+            
+            cprint('parser information..', 'yellow')
+            print(res)
             prettyprint(tree.root)
-        
+        print()
         if flag:
             nline = '.q'
        
+def binderinfo(expr, indent='', is_last=True):
+    marker = '└──' if is_last else '├──'    
+    # default color
+    color = 'magenta'
+    
+    if isinstance(expr, BBinaryExpression):
+        # constructing output 
+        out = indent + marker + expr.nodetype().name.upper()
+        color = 'magenta'
+        cprint(out + ' [type:' + str(expr.type()) + ', operator:' + expr.oper.tokentype.name + ']', color)
+
+        # visit children
+        last = expr.composition()[-1]
+        indent += '    ' if is_last else '│   '
+        for child in expr.composition():
+            binderinfo(child, indent, child == last)
+    elif isinstance(expr, BUnaryExpression):
+        out = indent + marker + expr.nodetype().name.upper()
+        color = 'green'
+        cprint(out + ' [type:' + str(expr.type()) + ', operand:' + expr.sign.tokentype.name + ']', color)
+        indent += '    ' if is_last else '│   '
+        binderinfo(expr.operand, indent, True)
+        return
+    elif isinstance(expr, BLiteralExpression):
+        out = indent + marker + expr.nodetype().name.upper()
+        color = 'cyan'
+        cprint(out + ' [type:' + str(expr.type()) + ', value:' + str(expr.value) + ']', color)
+        return
+    # set the indent for the next call
+    else: return
+    
+
+    
+    
+
 # prints the Syntax tree with a nice tree syntax
 def prettyprint(node, indent='', is_last=True):
     # the marker is decided based on whether the current node passed in is the last in that level

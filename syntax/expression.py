@@ -101,7 +101,11 @@ class NameExpression(Expression):
     def getchildren(self) -> Tuple:
         return (self.identifier, )
 
-
+# unlike other binary operators, assignment is right associative
+# eg:
+# a + b + c is parsed as either (a + b) + c or a + (b + c) 
+# addition is left or right associative
+# a = b = c is only parsed a = (b = c).
 class AssignmentExpression(Expression):
     def __init__(self, identifier: Token, equals: Token, expr: Expression):
         self.identifier = identifier

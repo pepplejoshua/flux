@@ -17,6 +17,11 @@ class BExpression(BoundNode):
     def type(self):
         pass
 
+    @abstractmethod
+    # this returns the primitive contents of the bound expression type
+    def composition(self):
+        pass
+
 class BLiteralExpression(BExpression):
     def __init__(self, val):
         self.value = val
@@ -29,6 +34,9 @@ class BLiteralExpression(BExpression):
     # this is the type that the expression results to
     def type(self) -> type:
         return type(self.value)
+
+    def composition(self):
+        return (self.value, )
 
 class BUnaryExpression(BExpression):
     def __init__(self, oper: BUnaryOperator, operand: BExpression):
@@ -43,6 +51,9 @@ class BUnaryExpression(BExpression):
     # this is the type that the expression results to, hence should be the actual operator's type
     def type(self) -> type:
         return self.sign.resulttype
+
+    def composition(self):
+        return (self.sign, self.operand)
         
 class BBinaryExpression(BExpression):
     def __init__(self, left: BExpression, oper: BBinaryOperator, right: BExpression):
@@ -58,3 +69,6 @@ class BBinaryExpression(BExpression):
     # this is the type that the expression results to
     def type(self) -> type:
         return self.oper.resulttype
+
+    def composition(self):
+        return (self.left, self.oper, self.right)

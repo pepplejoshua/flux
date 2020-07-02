@@ -76,18 +76,24 @@ class Parser:
     def beginparse(self) -> Expression:
         if self.error:
             return None
-        return self.parseexpression()
+        return self.parseassignmentexpression()
 
     def parseassignmentexpression(self) -> Expression:
-        #if self.lookahead(0).nodetype() == TokenType.identifier
-        pass
+        # make sure this isn't a hacky way of doing things
+        if self.lookahead(0).nodetype() == TokenType.identifier and self.lookahead(1).nodetype() == TokenType.assignment:
+            identifier = self.nexttoken()
+            assign = self.nexttoken()
+            value = self.parseassignmentexpression()
+            return AssignmentExpression(identifier, assign, value)
+        
+        return self.parsebinaryexpresion()
 
-    # this parses the tree by assuming (TODO: rethink and rewrite):
+    # this parses the tree by assuming:
     # token 1 & 3 = operand
     # token 2 is sent to a function to determine its precedence and perform 
     # a continuous forward look provided a non operator isn't read 
     # or a lower precedence operator isn't read
-    def parseexpression(self, parentprecendece=0) -> Expression:
+    def parsebinaryexpresion(self, parentprecendece=0) -> Expression:
         left: Expression
         un_pre = Helper.getunaryoperatorprecedence(self.current().nodetype())
 
@@ -96,7 +102,7 @@ class Parser:
         # --1 would've been read as un_op - <break since - and - have same precedence> - continue to parseprimaryexpression instead (generates error when in match())
         if un_pre != 0 and un_pre >= parentprecendece:
             sign = self.nexttoken()
-            operand = self.parseexpression(un_pre)
+            operand = self.parsebinaryexpresion(un_pre)
             left = UnaryExpression(sign, operand)
         else:
             left = self.parseprimaryexpression()
@@ -106,7 +112,7 @@ class Parser:
             if precedence == 0 or precedence <= parentprecendece:
                 break
             operator = self.nexttoken()
-            right = self.parseexpression(precedence)
+            right = self.parsebinaryexpresion(precedence)
             left = BinaryExpression(left, operator, right)
         return left
     
@@ -115,7 +121,7 @@ class Parser:
     def parseprimaryexpression(self) -> Expression:
         if (self.current().tokentype == TokenType.open_paren):
             left = self.nexttoken()
-            expr = self.parseexpression() # entry point to begin parsing
+            expr = self.beginparse() # entry point to begin parsing
             right = self.match(TokenType.closed_paren)
             return ParenthesizedExpression(left, expr, right)
 
@@ -126,6 +132,10 @@ class Parser:
             val = bool(val)
             return LiteralExpression(keyword, val) 
 
+        elif self.current().tokentype is TokenType.identifier:
+            identifier = self.nexttoken()
+            return NameExpression(identifier)
+            
         else:
             literal_token = self.match(TokenType.number)
             return LiteralExpression(literal_token)

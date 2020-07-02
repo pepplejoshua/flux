@@ -18,7 +18,7 @@ class Token(SyntaxNode):
         return self.tokentype
 
     def span(self) -> TextSpan:
-        return TextSpan(self.pos, len(self.val))
+        return TextSpan(self.pos, len(str(self.val)))
 
     # it is a leaf
     def getchildren(self) -> Tuple:

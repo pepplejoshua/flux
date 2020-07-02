@@ -15,19 +15,25 @@ class Binder:
 
     # entry point for recursion, similar to parser structure
     # depending on Expression type, we bind differently
+    # this is ordered by Immo's precedence. 
+    # TODO: try other arrangements
     def bindexpression(self, expr: Expression) -> BExpression:
-        if expr.nodetype() == TokenType.literal_expr:
+        if expr.nodetype() == TokenType.paren_expr:
+            return self.bindparenthesizedexpression(expr)
+        elif expr.nodetype() == TokenType.literal_expr:
             return self.bindliteralexpression(expr)
+        elif expr.nodetype() == TokenType.name_expr:
+            return self.bindnameexpression(expr)
+        elif expr.nodetype() == TokenType.assignment_expr:
+            return self.bindassignmentexpression(expr)
         elif expr.nodetype() == TokenType.unary_expr:
             return self.bindunaryexpression(expr)
         elif expr.nodetype() == TokenType.bin_expr:
             return self.bindbinaryexpression(expr)
-        elif expr.nodetype() == TokenType.paren_expr:
-            return self.bindexpression(expr.expr)
         else: 
             raise Exception(f"Unexpected syntax {expr.nodetype()}")
 
-        # LITERALS
+        # LITERALS 
     def bindliteralexpression(self, expr: LiteralExpression) -> BLiteralExpression:
         if isinstance(expr.value, bool):
             return BLiteralExpression(expr.value)
@@ -56,3 +62,12 @@ class Binder:
             self.diagnostics.reportundefinedbinaryoperator(expr.oper.span(), expr.oper.val, b_left.type(), b_right.type())
             return b_left
         return BBinaryExpression(b_left, b_sign, b_right)
+
+    def bindparenthesizedexpression(self, expr: ParenthesizedExpression) -> BExpression:
+        return self.bindexpression(expr.expr)
+
+    def bindnameexpression(self, expr: NameExpression) -> BExpression:
+        pass
+
+    def bindassignmentexpression(self, expr: AssignmentExpression) -> BExpression:
+        pass
