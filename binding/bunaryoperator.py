@@ -17,7 +17,6 @@ class BUnaryOperator:
         operators = [BUnaryOperator(TokenType.bang, BUnaryOperatorType.log_negate, bool), 
                         BUnaryOperator(TokenType.plus, BUnaryOperatorType.identity, int),
                         BUnaryOperator(TokenType.minus, BUnaryOperatorType.negate, int)]
-        
         for i in operators:
             if i.tokentype == ttype and i.operandtype == op_type:
                 return i

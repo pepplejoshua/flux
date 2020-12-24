@@ -2,6 +2,15 @@
 
 [![Build Status](https://dev.azure.com/pepplejoshua/office/_apis/build/status/pepplejoshua.flux?branchName=master)](https://dev.azure.com/pepplejoshua/office/_build/latest?definitionId=1&branchName=master)
 
+## installation:
+Commands:
+```
+pip install pyinstaller
+pyinstaller --onefile flux.py
+```
+This use of pyinstaller is to create an executable from python files.
+The executable is located at /dist/flux in your current folder. 
+
 ## nuggets:
 - use type(i) to get the base type of a variable i
 - using isinstance(x, Y) does you one better and tells you if x is an instance of Y class
@@ -26,7 +35,7 @@ not displaying syntax tree
 => .q
 Arigatōgozaimashita!
 ```
-> **Note:** _.cc_ command clears the terminal of previous inputs
+> **Note:** ".cc" interpreter command clears the terminal window.
 
 **syntax examples:**
 ```
@@ -130,6 +139,70 @@ displaying syntax tree
         │       │       └──CLOSED_PAREN [)]
         │       └──CLOSED_PAREN [)]
         └──CLOSED_PAREN [)]
+
+=> true and false
+False
+
+=> false || true
+True
+
+=> (1 == (5-4)) and (1 != 100-22) || false
+True
+└──BIN_EXPR
+    ├──BIN_EXPR
+    │   ├──PAREN_EXPR
+    │   │   ├──OPEN_PAREN [(]
+    │   │   ├──BIN_EXPR
+    │   │   │   ├──LITERAL_EXPR
+    │   │   │   │   └──NUMBER [1]
+    │   │   │   ├──EQUAL [==]
+    │   │   │   └──PAREN_EXPR
+    │   │   │       ├──OPEN_PAREN [(]
+    │   │   │       ├──BIN_EXPR
+    │   │   │       │   ├──LITERAL_EXPR
+    │   │   │       │   │   └──NUMBER [5]
+    │   │   │       │   ├──MINUS [-]
+    │   │   │       │   └──LITERAL_EXPR
+    │   │   │       │       └──NUMBER [4]
+    │   │   │       └──CLOSED_PAREN [)]
+    │   │   └──CLOSED_PAREN [)]
+    │   ├──AMPERSAND [and]
+    │   └──PAREN_EXPR
+    │       ├──OPEN_PAREN [(]
+    │       ├──BIN_EXPR
+    │       │   ├──LITERAL_EXPR
+    │       │   │   └──NUMBER [1]
+    │       │   ├──NOTEQUAL [!=]
+    │       │   └──BIN_EXPR
+    │       │       ├──LITERAL_EXPR
+    │       │       │   └──NUMBER [100]
+    │       │       ├──MINUS [-]
+    │       │       └──LITERAL_EXPR
+    │       │           └──NUMBER [22]
+    │       └──CLOSED_PAREN [)]
+    ├──PIPE [||]
+    └──LITERAL_EXPR
+        └──FALSE [False]
+
+=> abcsdcdfvsdvscd
+1:15 -> Unexpected token <TokenType.identifier>. Expected **<TokenType.number>**.
+  abcsdcdfvsdvscd
+
+=> *true
+1:1 -> Unexpected token <TokenType.multiply>. Expected <TokenType.number>
+  *true
+
+=> +true
+1:1 -> Unary operator '+' not defined for type <class 'bool'>.
+  +true
+
+=> +1
+1
+└──UNARY_EXPR
+    ├──PLUS [+]
+    └──LITERAL_EXPR
+        └──NUMBER [1]
+
 => .q
 Arigatōgozaimashita!
 ```

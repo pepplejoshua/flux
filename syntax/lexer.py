@@ -2,15 +2,24 @@ from .tokens import * # contains Token, TokenType
 from .helper import Helper
 import sys
 sys.path.append('..')
+<<<<<<< HEAD
 from textspan import TextSpan
 from diagnostics import DiagnosticBag
+=======
+from textspan import *
+from diagnostics import DiagnosticsBag
+>>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
 
 class Lexer:
     def __init__(self, input: str):
         self.input = input
         self.pos = 0
         self.helper = Helper()
+<<<<<<< HEAD
         self.Diagnostics = DiagnosticBag()
+=======
+        self.diagnostics = DiagnosticsBag()
+>>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
     
     def current(self) -> chr:
         return self.lookahead(0)
@@ -29,8 +38,8 @@ class Lexer:
     def lex(self) -> Token:
         # number, parenthesis, operators, whitespace
         
-        if self.pos+1 > len(self.input):
-            return Token(TokenType.eof, self.pos)
+        if self.pos >= len(self.input):
+            return Token(TokenType.eof, self.pos, '\0')
         
         if(str.isalpha(self.current())):
             # compute the range of the identifier [alphabets only]
@@ -43,12 +52,13 @@ class Lexer:
             # check if the substring is a reserved operator in word form (or, and, not)
             if self.helper.iswordoperator(sbstr):
                 ttype = self.helper.getoperatortokentype(sbstr)
-                token = Token(ttype, self.pos, sbstr)
+                token = Token(ttype, strt, sbstr)
             elif self.helper.iskeyword(sbstr):
                 token = self.helper.getkeywordtoken(sbstr, strt)
             else:
-                self.Diagnostics.report(TextSpan(strt, self.pos-strt), f'ERROR: Unknown identifier [{sbstr}]')
+                self.diagnostics.reportunknownidentifier(TextSpan(strt, self.pos-strt), sbstr)
                 token = Token(TokenType.bad_token, strt, sbstr)
+                token = Token(TokenType.identifier, strt, sbstr)
             return token
 
 
@@ -65,7 +75,7 @@ class Lexer:
             try:
                 sbstr = int(sbstr)
             except ValueError:
-                self.Diagnostics.reportinvalidnumber(TextSpan(strt, self.pos-strt),sbstr, int)
+                self.diagnostics.reportinvalidnumber(TextSpan(strt, self.pos-strt),sbstr, int)
 
             token = Token(TokenType.number, strt, sbstr)
             return token
@@ -125,6 +135,11 @@ class Lexer:
           
         elif self.current() != '\0':
             # this should handle all unhandled cases and returns a bad token
+<<<<<<< HEAD
             self.Diagnostics.reportbadcharacter(self.pos, self.current())
+=======
+            self.diagnostics.reportbadcharacter(self.pos, self.current())
+>>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
             token = Token(TokenType.bad_token, self.pos, self.current())
+            self.pos += 1
             return token

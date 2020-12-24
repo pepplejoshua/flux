@@ -1,5 +1,5 @@
 from termcolor import cprint
-from .syntax import SyntaxNode
+from .syntax import SyntaxNode, SyntaxTree
 from .tokentype import TokenType
 from typing import Tuple
 import sys
@@ -18,7 +18,7 @@ class Token(SyntaxNode):
         return self.tokentype
 
     def span(self) -> TextSpan:
-        return TextSpan(self.pos, len(self.val))
+        return TextSpan(self.pos, len(str(self.val)))
 
     # it is a leaf
     def getchildren(self) -> Tuple:

@@ -4,8 +4,13 @@ from .helper import Helper
 from .expression import *
 import sys
 sys.path.append('..')
+<<<<<<< HEAD
 from textspan import TextSpan
 from diagnostics import DiagnosticBag
+=======
+from textspan import *
+from diagnostics import DiagnosticsBag
+>>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
 
 # a recursive descent parser (idk what that means atm)
 class Parser: 
@@ -15,19 +20,24 @@ class Parser:
         self.pos = 0
         lexer = Lexer(input)
         self.tokens = []
+<<<<<<< HEAD
         self.Diagnostics = DiagnosticBag()
+=======
+        self.diagnostics = DiagnosticsBag()
+>>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
         token = lexer.lex()
         
+        if token.tokentype.name != 'eof':
         # continue to tokenize input until eof is seen, the repl has received an exit command or a bad_token is read
-        while token.tokentype.name != 'eof':
-            if (token.tokentype not in [TokenType.bad_token, TokenType.space]):
-                self.tokens.append(token)
-            elif token.tokentype is TokenType.bad_token:
-                self.error = True
-                break
-            token = lexer.lex()
+            while token.tokentype.name != 'eof':
+                if (token.tokentype not in [TokenType.bad_token, TokenType.space]):
+                    self.tokens.append(token)
+                elif token.tokentype is TokenType.bad_token:
+                    self.error = True
+                    break
+                token = lexer.lex()
         if self.error:
-            self.Diagnostics.append(lexer.Diagnostics)
+            self.diagnostics.append(lexer.diagnostics)
             return
         elif token.tokentype.name == 'eof': self.tokens.append(token)
 
@@ -58,7 +68,11 @@ class Parser:
                 return self.nexttoken()
             else:
                 # tell user about unexpected token and what token was expected in that position
+<<<<<<< HEAD
                 self.Diagnostics.reportunexpectedtoken(self.current().span(), self.current().tokentype, token_type)
+=======
+                self.diagnostics.reportunexpectedtoken(self.current().span(), self.current().tokentype, token_type)
+>>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
                 self.error = True
                 return Token(token_type, self.current().pos)
 
@@ -66,16 +80,33 @@ class Parser:
     # like numbers and basic literals
     def parse(self) -> SyntaxTree:
         # this is the main call. 
-        expr = self.parseexpression()
+        expr = self.beginparse()
+        if self.error:
+            return SyntaxTree(self.diagnostics, None, Token(TokenType.eof, len(self.tokens)), True)
         eof_token = self.match(TokenType.eof)
-        return SyntaxTree(self.Diagnostics, expr, eof_token)
+        return SyntaxTree(self.diagnostics, expr, eof_token)
 
-    # this parses the tree by assuming (TODO: rethink and rewrite):
+    def beginparse(self) -> Expression:
+        if self.error:
+            return None
+        return self.parseassignmentexpression()
+
+    def parseassignmentexpression(self) -> Expression:
+        # make sure this isn't a hacky way of doing things
+        if self.lookahead(0).nodetype() == TokenType.identifier and self.lookahead(1).nodetype() == TokenType.assignment:
+            identifier = self.nexttoken()
+            assign = self.nexttoken()
+            value = self.parseassignmentexpression()
+            return AssignmentExpression(identifier, assign, value)
+        
+        return self.parsebinaryexpresion()
+
+    # this parses the tree by assuming:
     # token 1 & 3 = operand
     # token 2 is sent to a function to determine its precedence and perform 
     # a continuous forward look provided a non operator isn't read 
     # or a lower precedence operator isn't read
-    def parseexpression(self, parentprecendece=0) -> Expression:
+    def parsebinaryexpresion(self, parentprecendece=0) -> Expression:
         left: Expression
         un_pre = Helper.getunaryoperatorprecedence(self.current().nodetype())
 
@@ -84,17 +115,17 @@ class Parser:
         # --1 would've been read as un_op - <break since - and - have same precedence> - continue to parseprimaryexpression instead (generates error when in match())
         if un_pre != 0 and un_pre >= parentprecendece:
             sign = self.nexttoken()
-            operand = self.parseexpression(un_pre)
+            operand = self.parsebinaryexpresion(un_pre)
             left = UnaryExpression(sign, operand)
         else:
             left = self.parseprimaryexpression()
         # you can choose to handle post-fix cases in between unary ops and regular ops
-        while True:
+        while not self.error:
             precedence = Helper.getbinaryoperatorprecedence(self.current().nodetype())
             if precedence == 0 or precedence <= parentprecendece:
                 break
             operator = self.nexttoken()
-            right = self.parseexpression(precedence)
+            right = self.parsebinaryexpresion(precedence)
             left = BinaryExpression(left, operator, right)
         return left
     
@@ -103,16 +134,21 @@ class Parser:
     def parseprimaryexpression(self) -> Expression:
         if (self.current().tokentype == TokenType.open_paren):
             left = self.nexttoken()
-            expr = self.parseexpression() # entry point to begin parsing
+            expr = self.beginparse() # entry point to begin parsing
             right = self.match(TokenType.closed_paren)
             return ParenthesizedExpression(left, expr, right)
 
+        # Literals are currently: BOOL and INTEGERS
         elif self.current().tokentype in (TokenType.true, TokenType.false):
             keyword = self.current()
             val = True if self.nexttoken().tokentype == TokenType.true else False # t is t and f otherwise
             val = bool(val)
             return LiteralExpression(keyword, val) 
 
+        elif self.current().tokentype is TokenType.identifier:
+            identifier = self.nexttoken()
+            return NameExpression(identifier)
+            
         else:
             literal_token = self.match(TokenType.number)
             return LiteralExpression(literal_token)
