@@ -17,6 +17,8 @@ class BBinaryOperator:
         if not right:
             self.right = left
 
+    # based on the token type sent in, we send back an already constructed bound operator (Binary)
+    # to add to the bound tree
     @staticmethod
     def bind(ttype: TokenType, left: type, right: type):
         operators = [BBinaryOperator(TokenType.plus, BBinaryOperatorType.plus, int), 

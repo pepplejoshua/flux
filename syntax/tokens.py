@@ -4,7 +4,7 @@ from .tokentype import TokenType
 from typing import Tuple
 import sys
 sys.path.append('..')
-from textspan import *
+from textspan import TextSpan
 
 # by making Token class inherit the Abstract Syntax node, they become the building blocks of either simple 
 # or complex syntax nodes. They are the leaves of the syntax tree

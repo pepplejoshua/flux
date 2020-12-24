@@ -4,7 +4,8 @@ from .helper import Helper
 from .expression import *
 import sys
 sys.path.append('..')
-from textspan import *
+from textspan import TextSpan
+from diagnostics import DiagnosticBag
 
 # a recursive descent parser (idk what that means atm)
 class Parser: 
@@ -14,7 +15,7 @@ class Parser:
         self.pos = 0
         lexer = Lexer(input)
         self.tokens = []
-        self.Diagnostics = Diagnostics()
+        self.Diagnostics = DiagnosticBag()
         token = lexer.lex()
         
         # continue to tokenize input until eof is seen, the repl has received an exit command or a bad_token is read
@@ -57,7 +58,7 @@ class Parser:
                 return self.nexttoken()
             else:
                 # tell user about unexpected token and what token was expected in that position
-                self.Diagnostics.report(self.current.span(), f'ERROR: Unexpected token <{self.current().tokentype}>. Expected <{token_type}>')
+                self.Diagnostics.reportunexpectedtoken(self.current().span(), self.current().tokentype, token_type)
                 self.error = True
                 return Token(token_type, self.current().pos)
 

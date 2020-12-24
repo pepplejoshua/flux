@@ -9,7 +9,8 @@ class Compilation:
     def evaluate(self):
         binder = Binder()
         b_expr = binder.bindexpression(self.tree.root)
-        diag = self.tree.diagnostics.append(binder.diagnostics)
+        self.tree.Diagnostics.append(binder.Diagnostics)
+        diag = self.tree.Diagnostics.Diagnostics
         eval = BExpressionEvaluator(b_expr)
         res = eval.evaluate()
         if diag: return EvaluationResult(diag, None)
@@ -18,4 +19,4 @@ class Compilation:
 class EvaluationResult:
     def __init__(self, diag: [], value):
         self.value = value
-        self.diagnostics = diag
+        self.Diagnostics = diag

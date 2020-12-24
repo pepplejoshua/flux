@@ -5,6 +5,8 @@ from os import name, system
 from binding.binder import *
 import sys 
 from compilation import *
+from colorama import init
+init()
 def entry(flag, nline, test=False, code=False):
     # get single line and then tokenize repeatedly > repl
     if not test:
@@ -47,14 +49,14 @@ def entry(flag, nline, test=False, code=False):
         parser = Parser(line)
         # handle any lexing errors
         if parser.error:
-            for msg in parser.Diagnostics.diagnostics:
+            for msg in parser.Diagnostics.Diagnostics:
                 cprint(msg.tostring(), 'red', 'on_grey')
             continue
         # parse the tokens and build a tree
         tree = parser.parse()
         # handle any parsing errors
         if parser.error:
-            for msg in parser.Diagnostics.diagnostics:
+            for msg in parser.Diagnostics.Diagnostics:
                 cprint(msg.tostring(), 'red', 'on_grey')
             continue
         else:
@@ -62,7 +64,7 @@ def entry(flag, nline, test=False, code=False):
             # compilation(SynTree)
             comp = Compilation(tree)
             result = comp.evaluate()
-            diag = result.Diagnostics.diagnostics
+            diag = result.Diagnostics
             res = result.value
             if diag:
                 for msg in diag:
@@ -85,7 +87,7 @@ def prettyprint(node, indent='', is_last=True):
     # constructing output 
     out = indent + marker + node.nodetype().name.upper()
     # default color
-    color = 'magenta'
+    color = 'white'
     # if we have run into a leaf (Token inside an expression)
     if isinstance(node, Token):
         # numbers get green, other types get cyan
