@@ -35,21 +35,11 @@ class Lexer:
         if(str.isalpha(self.current())):
             # compute the range of the identifier [alphabets only]
             strt = self.pos
-            
             while(str.isalpha(self.current())):
                 self.next()
 
             sbstr = self.input[strt:self.pos]
-            # check if the substring is a reserved operator in word form (or, and, not)
-            if self.helper.iswordoperator(sbstr):
-                ttype = self.helper.getoperatortokentype(sbstr)
-                token = Token(ttype, strt, sbstr)
-            elif self.helper.iskeyword(sbstr):
-                token = self.helper.getkeywordtoken(sbstr, strt)
-            else:
-                self.diagnostics.reportunknownidentifier(TextSpan(strt, self.pos-strt), sbstr)
-                token = Token(TokenType.bad_token, strt, sbstr)
-                token = Token(TokenType.identifier, strt, sbstr)
+            token = self.helper.getkeywordtoken(sbstr, strt)
             return token
 
 

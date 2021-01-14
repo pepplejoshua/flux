@@ -10,9 +10,9 @@ from textspan import TextSpan
 from diagnostics import DiagnosticsBag
 
 class Binder:
-    def __init__(self):
+    def __init__(self, variables: {}):
         self.diagnostics = DiagnosticsBag()
-
+        self.variables = variables 
     # entry point for recursion, similar to parser structure
     # depending on Expression type, we bind differently
     # this is ordered by Immo's precedence. 
@@ -67,7 +67,14 @@ class Binder:
         return self.bindexpression(expr.expr)
 
     def bindnameexpression(self, expr: NameExpression) -> BExpression:
-        pass
+        name = expr.identifier.val
+
+        if name not in self.variables:
+            self.diagnostics.reportundefinedname(expr.identifier.span(), name)
+            return BLiteralExpression(0)
+
+        var_type = type(self.variables[name]) if type(self.variables[name]) else object 
+        return BVariableExpression(name, var_type)
 
     def bindassignmentexpression(self, expr: AssignmentExpression) -> BExpression:
         pass

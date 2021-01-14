@@ -1,5 +1,4 @@
 from .lexer import Lexer
-from termcolor import cprint
 from .helper import Helper
 from .expression import *
 import sys
@@ -81,6 +80,7 @@ class Parser:
     def parseassignmentexpression(self) -> Expression:
         # make sure this isn't a hacky way of doing things
         if self.lookahead(0).nodetype() == TokenType.identifier and self.lookahead(1).nodetype() == TokenType.assignment:
+            print('Found assignment..')
             identifier = self.nexttoken()
             assign = self.nexttoken()
             value = self.parseassignmentexpression()

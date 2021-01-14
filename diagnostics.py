@@ -46,5 +46,9 @@ class DiagnosticsBag:
         msg = f"Binary operator '{op_text}' not defined for types {ltype} and {rtype}."
         self.report(span, msg)
 
+    def reportundefinedname(self, span: TextSpan, name: str):
+        msg = f"Variable '{name}' doesn't exist."
+        self.report(span, msg) 
+
     def append(self, diags):
         self.information += diags.information

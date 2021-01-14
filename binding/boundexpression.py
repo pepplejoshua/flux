@@ -9,9 +9,15 @@ class BNodeType(Enum):
     bLiteral_expr = auto()
     bUnary_expr = auto()
     bBin_expr = auto()
+    bVariable_expr = auto()
 
 # this is the base bound expression type
 class BExpression(BoundNode): 
+    @abstractmethod
+    # this returns the bound expression type
+    def nodetype(self) -> BNodeType:
+        pass
+    
     @abstractmethod
     # this returns the bound expression type
     def type(self):
@@ -72,3 +78,17 @@ class BBinaryExpression(BExpression):
 
     def composition(self):
         return (self.left, self.oper, self.right)
+
+class BVariableExpression(BExpression):
+    def __init__(self, name, var_type: type):
+        self.name = name
+        self.typing = var_type
+
+    def nodetype(self) -> BNodeType:
+        return BNodeType.bVariable_expr
+
+    def type(self) -> type:
+        return self.typing
+
+    def composition(self):
+        return (self.name, self.typing)

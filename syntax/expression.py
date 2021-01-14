@@ -67,7 +67,9 @@ class Expression(SyntaxNode):
 class LiteralExpression(Expression):
     def __init__(self, token: Token, val=None):
         self.token = token
-        if val:
+
+        # hence, False cannot pass this check.
+        if val != None:
             self.value = val
         else:
             self.value = token.val

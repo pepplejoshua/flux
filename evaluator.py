@@ -4,8 +4,9 @@ from binding.boundoperatortypes import *
 
 # this recursively traverses a bound tree[SyntaxTree] and returns a result
 class BExpressionEvaluator:
-    def __init__(self, rootExpr: BExpression):
+    def __init__(self, rootExpr: BExpression, variables):
         self.root = rootExpr
+        self.variables = variables
     
     def evaluate(self):
         return self.evaluateexpression(self.root)

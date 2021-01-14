@@ -6,6 +6,8 @@ from binding.binder import *
 from binding.boundexpression import *
 import sys 
 from compilation import *
+from colorama import init
+init()
 
 def entry(flag, nline, test=False, code=False):
     # get single line and then tokenize repeatedly > repl
@@ -25,14 +27,17 @@ def entry(flag, nline, test=False, code=False):
         if line not in ('_', '.q', '.st', '.cc'):
             history.append(line)
         elif line == '_':
-            line = history[-1]
-            cprint(f"executing {line}", 'yellow')
+            if len(history) > 0:
+                line = history[-1]
+                cprint(f"executing \"{line}\"", 'yellow')
+            else:
+                cprint('no logged history of commands..', 'yellow')
+                continue
         # user requested exit 
         if line == '.q':
             if not test:
                 cprint('Arigatōgozaimashita!', 'yellow')
             return res
-            break
         # toggle showing syntax tree
         if line == '.st':
             showtree = not showtree
@@ -48,27 +53,24 @@ def entry(flag, nline, test=False, code=False):
 
         tree = SyntaxTree.parse(line)
         # handle any parsing errors
-        
-        comp = Compilation(tree)
-        result = comp.evaluate()
-        diag = result.diagnostics
-        res = result.value
+        diag = tree.diagnostics.information
+
         if diag:
-            print()
-            for msg in diag[::-1]:
-                print(msg.spantostring(), sep='',end=' -> ')
-                cprint(msg.errortostring(), 'yellow')
-                prefx = line[0:msg.textspan.start]
-                err = line[msg.textspan.start: msg.textspan.end]
-                suffx = line[msg.textspan.end:]
-                
-                print('  '+prefx, end='')
-                cprint(err, 'red', 'on_grey', end='')
-                print(suffx, end='\n\n')
+            print(diag)
+            informOnError(line, diag)
             continue
 
+        comp = Compilation(tree)
+        result = comp.evaluate({})
+        diag = result.diagnostics
+        res = result.value
+        
+        if diag:
+            informOnError(line, diag)
+            continue
+
+        print(res)
         if showtree:
-            print(res)
             cprint('binder information..', 'yellow')
             binderinfo(result.boundExpr)
             print()
@@ -79,7 +81,20 @@ def entry(flag, nline, test=False, code=False):
         print()
         if flag:
             nline = '.q'
-       
+
+def informOnError(line, diag):
+    print()
+    for msg in diag:
+        print(msg.spantostring(), sep='',end=' -> ')
+        cprint(msg.errortostring(), 'yellow')
+        prefx = line[0:msg.textspan.start]
+        err = line[msg.textspan.start: msg.textspan.end]
+        suffx = line[msg.textspan.end:]
+        
+        print('  '+prefx, end='')
+        cprint(err, 'red', 'on_grey', end='')
+        print(suffx, end='\n\n')
+  
 def binderinfo(expr, indent='', is_last=True):
     marker = '└──' if is_last else '├──'    
     # default color
@@ -110,10 +125,6 @@ def binderinfo(expr, indent='', is_last=True):
         return
     # set the indent for the next call
     else: return
-    
-
-    
-    
 
 # prints the Syntax tree with a nice tree syntax
 def prettyprint(node, indent='', is_last=True):
