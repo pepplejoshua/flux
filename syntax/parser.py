@@ -3,13 +3,8 @@ from .helper import Helper
 from .expression import *
 import sys
 sys.path.append('..')
-<<<<<<< HEAD
 from textspan import TextSpan
-from diagnostics import DiagnosticBag
-=======
-from textspan import *
 from diagnostics import DiagnosticsBag
->>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
 
 # a recursive descent parser (idk what that means atm)
 class Parser: 
@@ -19,11 +14,7 @@ class Parser:
         self.pos = 0
         lexer = Lexer(input)
         self.tokens = []
-<<<<<<< HEAD
-        self.Diagnostics = DiagnosticBag()
-=======
         self.diagnostics = DiagnosticsBag()
->>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
         token = lexer.lex()
         
         if token.tokentype.name != 'eof':
@@ -67,11 +58,7 @@ class Parser:
                 return self.nexttoken()
             else:
                 # tell user about unexpected token and what token was expected in that position
-<<<<<<< HEAD
-                self.Diagnostics.reportunexpectedtoken(self.current().span(), self.current().tokentype, token_type)
-=======
                 self.diagnostics.reportunexpectedtoken(self.current().span(), self.current().tokentype, token_type)
->>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
                 self.error = True
                 return Token(token_type, self.current().pos)
 

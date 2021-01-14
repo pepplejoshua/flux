@@ -51,35 +51,26 @@ def entry(flag, nline, test=False, code=False):
             _ = system(command)
             cprint('Flux v0.0.1', 'green')
             continue
- 
-        parser = Parser(line)
+            
+        tree = SyntaxTree.parse(line)
         # handle any lexing errors
-        if parser.error:
-            for msg in parser.Diagnostics.Diagnostics:
-                cprint(msg.tostring(), 'red', 'on_grey')
+        diag = tree.diagnostics.information
+        if diag:
+            informOnError(line, diag)
             continue
         # parse the tokens and build a tree
-        tree = parser.parse()
         # handle any parsing errors
-        if parser.error:
-            for msg in parser.Diagnostics.Diagnostics:
-                cprint(msg.tostring(), 'red', 'on_grey')
-            continue
         else:
-            # TODO: change to use Compilation and EvaluateResult
-            # compilation(SynTree)
             comp = Compilation(tree)
-            result = comp.evaluate()
-            diag = result.Diagnostics
+            result = comp.evaluate({})
+            diag = result.diagnostics
             res = result.value
             if diag:
-                for msg in diag:
-                    cprint(msg.tostring(), 'red', 'on_grey')
+                informOnError(line, diag)
                 continue
             if not test:
                 print(res)
 
-        print(res)
         if showtree:
             cprint('binder information..', 'yellow')
             binderinfo(result.boundExpr)

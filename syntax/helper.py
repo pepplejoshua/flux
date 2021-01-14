@@ -42,7 +42,7 @@ class Helper:
     # get operator precedence of binary operator token else return 
     @staticmethod
     def getunaryoperatorprecedence(tokentype: TokenType) -> int:
-        operators ={TokenType.plus: 7,
+        operators ={TokenType.plus: 7, 
                 TokenType.minus: 7, 
                 TokenType.bang: 7}
 

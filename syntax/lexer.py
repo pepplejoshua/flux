@@ -2,24 +2,15 @@ from .tokens import * # contains Token, TokenType
 from .helper import Helper
 import sys
 sys.path.append('..')
-<<<<<<< HEAD
 from textspan import TextSpan
-from diagnostics import DiagnosticBag
-=======
-from textspan import *
 from diagnostics import DiagnosticsBag
->>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
 
 class Lexer:
     def __init__(self, input: str):
         self.input = input
         self.pos = 0
         self.helper = Helper()
-<<<<<<< HEAD
-        self.Diagnostics = DiagnosticBag()
-=======
         self.diagnostics = DiagnosticsBag()
->>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
     
     def current(self) -> chr:
         return self.lookahead(0)
@@ -125,11 +116,7 @@ class Lexer:
           
         elif self.current() != '\0':
             # this should handle all unhandled cases and returns a bad token
-<<<<<<< HEAD
-            self.Diagnostics.reportbadcharacter(self.pos, self.current())
-=======
             self.diagnostics.reportbadcharacter(self.pos, self.current())
->>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
             token = Token(TokenType.bad_token, self.pos, self.current())
             self.pos += 1
             return token

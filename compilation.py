@@ -12,12 +12,7 @@ class Compilation:
         binder = Binder(variables)
         b_expr = binder.bindexpression(self.tree.root)
 
-        self.tree.Diagnostics.append(binder.Diagnostics)
-        diag = self.tree.Diagnostics.Diagnostics
-
         diag = self.tree.diagnostics.information + binder.diagnostics.information
-        eval = BExpressionEvaluator(b_expr)
-        res = eval.evaluate()
 
         if diag: return EvaluationResult(None, diag, None)
         eval = BExpressionEvaluator(b_expr, variables)
@@ -28,4 +23,4 @@ class EvaluationResult:
     def __init__(self, boundExpr, diag, value):
         self.boundExpr = boundExpr
         self.value = value
-        self.Diagnostics = diag
+        self.diagnostics = diag
