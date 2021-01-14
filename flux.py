@@ -6,6 +6,7 @@ from binding.binder import *
 from binding.boundexpression import *
 import sys 
 from compilation import *
+
 from colorama import init
 init()
 
@@ -50,24 +51,33 @@ def entry(flag, nline, test=False, code=False):
             _ = system(command)
             cprint('Flux v0.0.1', 'green')
             continue
-
-        tree = SyntaxTree.parse(line)
+ 
+        parser = Parser(line)
+        # handle any lexing errors
+        if parser.error:
+            for msg in parser.Diagnostics.Diagnostics:
+                cprint(msg.tostring(), 'red', 'on_grey')
+            continue
+        # parse the tokens and build a tree
+        tree = parser.parse()
         # handle any parsing errors
-        diag = tree.diagnostics.information
-
-        if diag:
-            print(diag)
-            informOnError(line, diag)
+        if parser.error:
+            for msg in parser.Diagnostics.Diagnostics:
+                cprint(msg.tostring(), 'red', 'on_grey')
             continue
-
-        comp = Compilation(tree)
-        result = comp.evaluate({})
-        diag = result.diagnostics
-        res = result.value
-        
-        if diag:
-            informOnError(line, diag)
-            continue
+        else:
+            # TODO: change to use Compilation and EvaluateResult
+            # compilation(SynTree)
+            comp = Compilation(tree)
+            result = comp.evaluate()
+            diag = result.Diagnostics
+            res = result.value
+            if diag:
+                for msg in diag:
+                    cprint(msg.tostring(), 'red', 'on_grey')
+                continue
+            if not test:
+                print(res)
 
         print(res)
         if showtree:
@@ -134,7 +144,7 @@ def prettyprint(node, indent='', is_last=True):
     # constructing output 
     out = indent + marker + node.nodetype().name.upper()
     # default color
-    color = 'magenta'
+    color = 'white'
     # if we have run into a leaf (Token inside an expression)
     if isinstance(node, Token):
         # numbers get green, other types get cyan

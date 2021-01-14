@@ -1,8 +1,13 @@
 from abc import ABC, abstractmethod
 import sys
 sys.path.append('..')
+<<<<<<< HEAD
+from diagnostics import DiagnosticBag
+
+=======
 from textspan import *
 from diagnostics import DiagnosticsBag
+>>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
 
 # a base node type for syntax tree
 class SyntaxNode(ABC):
@@ -16,8 +21,13 @@ class SyntaxNode(ABC):
 
 # a syntax tree class which is just a class containing a root to attached ASyntaxNode(s)
 class SyntaxTree:
+<<<<<<< HEAD
+    def __init__(self, diagnostics: DiagnosticBag, root: SyntaxNode, eof_token):
+        self.Diagnostics = diagnostics
+=======
     def __init__(self, diagnostics: DiagnosticsBag, root: SyntaxNode, eof_token, error=False):
         self.diagnostics = diagnostics
+>>>>>>> c8712e7da967f336c28cd1698865615c7e3a890c
         self.root = root
         self.eof = eof_token
         self.error = error

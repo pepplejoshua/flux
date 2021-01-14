@@ -2,6 +2,8 @@ from flux import entry
 import pytest
 import sys
 from termcolor import cprint
+from colorama import init
+init()
 
 def eval(eq):
         res = entry(True, False, test=True, code=eq)

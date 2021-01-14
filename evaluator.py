@@ -2,7 +2,8 @@ from binding.boundexpression import *
 from binding.boundoperatortypes import *
 
 
-# this recursively traverses a bound tree[SyntaxTree] and returns a result
+# this recursively traverses a bound tree[SyntaxTree] 
+# and comes up with a result by executing the operations in the tree
 class BExpressionEvaluator:
     def __init__(self, rootExpr: BExpression, variables):
         self.root = rootExpr
@@ -11,13 +12,15 @@ class BExpressionEvaluator:
     def evaluate(self):
         return self.evaluateexpression(self.root)
 
+    # recursively solving an expression from the root
     def evaluateexpression(self, root: BExpression):
         # separate case for separate expression types 
         # num_expr, bin_expr, unary_expr, paren_expr
         
+        # the simplest expr type, so get the value
         if isinstance(root, BLiteralExpression):
             return root.value  
-
+        # unary expr, so apply its operator to it
         elif isinstance(root, BUnaryExpression):
             sign = root.sign
             oper = self.evaluateexpression(root.operand)

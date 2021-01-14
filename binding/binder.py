@@ -7,12 +7,20 @@ from .bbinaryoperator import *
 from .bunaryoperator import *
 from syntax.tokentype import TokenType
 from textspan import TextSpan
+
+from diagnostics import DiagnosticBag
+
+class Binder:
+    def __init__(self):
+        self.Diagnostics = DiagnosticBag()
+    
 from diagnostics import DiagnosticsBag
 
 class Binder:
     def __init__(self, variables: {}):
         self.diagnostics = DiagnosticsBag()
         self.variables = variables 
+
     # entry point for recursion, similar to parser structure
     # depending on Expression type, we bind differently
     # this is ordered by Immo's precedence. 
@@ -49,7 +57,7 @@ class Binder:
         b_operand = self.bindexpression(expr.operand)
         b_sign = BUnaryOperator.bind(expr.sign.tokentype, b_operand.type())
         if not b_sign:
-            self.diagnostics.reportundefinedunaryoperator(expr.sign.span(), expr.sign.val, b_operand.type())
+            self.Diagnostics.reportundefinedunaryoperator(expr.sign.span(), expr.sign.val, b_operand.type())
             return b_operand
         return BUnaryExpression(b_sign, b_operand)
 
@@ -59,7 +67,7 @@ class Binder:
         b_right = self.bindexpression(expr.right)
         b_sign = BBinaryOperator.bind(expr.oper.tokentype, b_left.type(), b_right.type())
         if not b_sign: 
-            self.diagnostics.reportundefinedbinaryoperator(expr.oper.span(), expr.oper.val, b_left.type(), b_right.type())
+            self.Diagnostics.reportundefinedbinaryoperator(expr.oper.span(), expr.oper.val, b_left.type(), b_right.type())
             return b_left
         return BBinaryExpression(b_left, b_sign, b_right)
 
