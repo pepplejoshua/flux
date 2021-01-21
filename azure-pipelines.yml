@@ -21,7 +21,7 @@ steps:
 
 - script: |
     pip install --upgrade pip
-    pip install pytest pytest-azurepipelines termcolor
+    pip install pytest pytest-azurepipelines termcolor colorama
   displayName: 'Install dependencies'
 
 - script: |
