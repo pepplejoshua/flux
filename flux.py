@@ -1,4 +1,3 @@
-from syntax.parser import Parser
 from syntax.tokens import *
 from evaluator import *
 from os import name, system
