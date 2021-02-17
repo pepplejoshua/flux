@@ -1,10 +1,7 @@
-from termcolor import cprint
-from .syntax import SyntaxNode, SyntaxTree
+from .syntax import SyntaxNode
 from .tokentype import TokenType
 from typing import Tuple
-import sys
-sys.path.append('..')
-from textspan import TextSpan
+from .textspan import TextSpan
 
 # by making Token class inherit the Abstract Syntax node, they become the building blocks of either simple 
 # or complex syntax nodes. They are the leaves of the syntax tree
@@ -21,7 +18,8 @@ class Token(SyntaxNode):
         return TextSpan(self.pos, len(str(self.val)))
 
     # it is a leaf
-    def getchildren(self) -> Tuple:
+    def getchildren(_) -> Tuple:
+        # _ because self is not used
         return ()
 
     def display(self):

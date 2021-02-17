@@ -1,6 +1,5 @@
 from flux import entry
 import pytest
-import sys
 from termcolor import cprint
 from colorama import init
 init()

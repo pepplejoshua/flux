@@ -1,10 +1,7 @@
 from .lexer import Lexer
 from .helper import Helper
 from .expression import *
-import sys
-sys.path.append('..')
-from textspan import TextSpan
-from diagnostics import DiagnosticsBag
+from Core.diagnostics import DiagnosticsBag
 
 # a recursive descent parser (idk what that means atm)
 class Parser: 

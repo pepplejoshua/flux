@@ -1,14 +1,10 @@
 # effectively a type checker
-import sys
-sys.path.append('..')
-from syntax.expression import *
+from Core.expression import *
 from .boundexpression import *
 from .bbinaryoperator import *
 from .bunaryoperator import *
-from syntax.tokentype import TokenType
-from textspan import TextSpan
-
-from diagnostics import DiagnosticsBag
+from Core.tokentype import TokenType
+from Core.diagnostics import DiagnosticsBag
 
 class Binder:
     def __init__(self, variables):

@@ -1,5 +1,5 @@
 from binding.binder import Binder
-from syntax.syntax import SyntaxTree
+from Core.syntax import SyntaxTree
 from evaluator import BExpressionEvaluator
 class Compilation:
     def __init__(self, tree: SyntaxTree):

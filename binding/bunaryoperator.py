@@ -1,7 +1,5 @@
-import sys
-sys.path.append('..')
 from .boundoperatortypes import BUnaryOperatorType
-from syntax.tokentype import *
+from Core.tokentype import *
 
 class BUnaryOperator:
     def __init__(self, ttype: TokenType, uop_type: BUnaryOperatorType, op_type: type, res: type = None):

@@ -1,9 +1,7 @@
-from .tokens import * # contains Token, TokenType
+from Core.tokens import * # contains Token, TokenType
 from .helper import Helper
-import sys
-sys.path.append('..')
-from textspan import TextSpan
-from diagnostics import DiagnosticsBag
+from Core.textspan import TextSpan
+from Core.diagnostics import DiagnosticsBag
 
 class Lexer:
     def __init__(self, input: str):

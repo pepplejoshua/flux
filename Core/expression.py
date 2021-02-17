@@ -1,5 +1,5 @@
-from .syntax import *
-from .tokens import *
+from Core.syntax import *
+from Core.tokens import *
 from typing import Tuple
 # the higher the precedence of the operator, the lower in the Tree it'll be. 
 # 1 + 2 * 3

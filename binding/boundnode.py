@@ -4,5 +4,6 @@ from abc import ABC, abstractmethod
 class BoundNode(ABC):
     @abstractmethod
     # this returns the bound individual node type
-    def nodetype(self):
+    def nodetype(_):
+        # _ because self if not used
         pass

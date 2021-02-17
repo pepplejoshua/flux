@@ -1,7 +1,5 @@
-import sys
-sys.path.append('..')
 from .boundoperatortypes import BBinaryOperatorType
-from syntax.tokentype import *
+from Core.tokentype import *
 
 # overloading an operator operation type is possible using a tuple of all the return types that it can support. 
 # this will require a way of allowing the operation to be evaluated or binded later if it matches one of the permitted types

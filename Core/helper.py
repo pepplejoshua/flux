@@ -1,6 +1,6 @@
-from .tokentype import TokenType
-from .tokens import Token
-from termcolor import cprint
+from Core.tokentype import TokenType
+from Core.tokens import Token
+
 class Helper:
     operators = {'+': TokenType.plus,
                 '-': TokenType.minus,

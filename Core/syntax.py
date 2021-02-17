@@ -1,17 +1,16 @@
 from abc import ABC, abstractmethod
-import sys
-sys.path.append('..')
-from diagnostics import DiagnosticsBag
+from .diagnostics import DiagnosticsBag
 
 
 # a base node type for syntax tree
 class SyntaxNode(ABC):
     @abstractmethod
-    def nodetype(self):
+    def nodetype(_):
+        # _ because self is not used
         pass
 
     @abstractmethod
-    def getchildren(self):
+    def getchildren(_):
         pass
 
 # a syntax tree class which is just a class containing a root to attached ASyntaxNode(s)

@@ -1,5 +1,5 @@
-from textspan import TextSpan
-from syntax.tokentype import TokenType
+from .textspan import TextSpan
+from .tokentype import TokenType
 
 class Diagnostic:
     def __init__(self, span: TextSpan, msg: str):

@@ -1,9 +1,10 @@
-from syntax.tokens import *
+from Core.tokens import *
 from evaluator import *
 from os import name, system
 from binding.binder import *
 from binding.boundexpression import *
 import sys 
+from termcolor import cprint
 from compilation import *
 
 from colorama import init
@@ -22,7 +23,7 @@ def entry(flag, nline, test=False, code=False):
         # run like normal
         cmd = code if test else '.q'
         line = input("=> ") if not flag else cmd
-        line = line if not nline else nline
+        line = line.strip() if not nline else nline
         
         if line not in ('_', '.q', '.st', '.cc'):
             history.append(line)
@@ -50,7 +51,15 @@ def entry(flag, nline, test=False, code=False):
             _ = system(command)
             cprint('Flux v0.0.1', 'green')
             continue
-            
+        
+        print(line)
+        if line[0:3] == ".h":
+            try:
+                indx = int(line[2:])
+                print(indx)
+            except ValueError:
+                cprint('Index not a valid number.', 'red', 'on_grey')
+
         tree = SyntaxTree.parse(line)
         # handle any lexing errors
         diag = tree.diagnostics.information
