@@ -87,3 +87,7 @@ steps:
 - script: |
     pytest -s --etype='bool' --exp='True' --ln='(1 == (5-4)) and (1 != 100-22)'
   displayName: 'Parenthesized Boolean comparator expression'
+
+- script: |
+    pytest -s --etype='bool' --exp='True' --ln='(true || false) or (false && true) || (not false) or (!true)'
+  displayName: 'Word and symbol boolean comparators expression'
