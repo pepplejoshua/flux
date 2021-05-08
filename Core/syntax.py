@@ -1,3 +1,4 @@
+from Core.tokentype import TokenType
 from abc import ABC, abstractmethod
 from .diagnostics import DiagnosticsBag
 
@@ -26,6 +27,18 @@ class SyntaxTree:
         from .parser import Parser
         parser = Parser(line)
         return parser.parse()
+
+    @staticmethod
+    def lexTokens(line: str):
+        from .lexer import Lexer
+        lexer = Lexer(line)
+        toks = []
+        while True:
+            tok = lexer.lex()
+            toks.append(tok)
+            if tok.tokentype == TokenType.eof:
+                break
+        return toks
 
 
 

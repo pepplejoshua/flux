@@ -18,8 +18,8 @@ class TokenType(Enum):
     plus = auto()
     minus = auto()
     multiply = auto()
-    divide = auto()
     modulo = auto()
+    divide = auto()
     exponent = auto()
     assignment = auto()
     # bool operators

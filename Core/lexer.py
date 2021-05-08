@@ -66,7 +66,9 @@ class Lexer:
             
             while(str.isspace(self.current())):
                 self.advanceIndex()
-            token = Token(TokenType.space, strt)
+            
+            sbstr = self.input[strt:self.pos]
+            token = Token(TokenType.space, strt, sbstr)
             return token
 
         elif self.helper.isoperator(self.current()):

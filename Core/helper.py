@@ -23,6 +23,14 @@ class Helper:
         """Check if val is an operator"""
         return val in self.operators
     
+    def iskeyword(self, val: str) -> bool:
+        return val in self.keywords
+
+    def isKeywordTokenType(self, val: TokenType) -> bool:
+        vals = list(self.keywords.values())
+        return val in vals
+
+
     def isparenthesis(self, val: str) -> bool:
         """Check if val is either open or closed parenthesis"""
         return val in ['(', ')']
@@ -35,8 +43,9 @@ class Helper:
 
     # get operator precedence of binary operator token else return 
     def getkeywordtoken(self, val: str, pos: int) -> Token:
-        token_type = self.keywords.get(val, 0)
-        if token_type: return Token(token_type, pos, val)
+        if self.iskeyword(val): 
+            token_type = self.keywords[val]
+            return Token(token_type, pos, val)
         else: return Token(TokenType.identifier, pos, val)
     
     # get operator precedence of binary operator token else return 
