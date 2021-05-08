@@ -74,7 +74,7 @@ class LiteralExpression(Expression):
         else:
             self.value = token.val
 
-    def nodetype(self) -> TokenType:
+    def nodetype(_) -> TokenType:
         return TokenType.literal_expr 
 
     def getchildren(self) -> Tuple:
@@ -86,7 +86,7 @@ class UnaryExpression(Expression):
         self.sign = operator
         self.operand = operand
 
-    def nodetype(self) -> TokenType:
+    def nodetype(_) -> TokenType:
         return TokenType.unary_expr
 
     def getchildren(self) -> Tuple:
@@ -97,7 +97,7 @@ class NameExpression(Expression):
     def __init__(self, identifier: Token):
         self.identifier = identifier
 
-    def nodetype(self) -> TokenType:
+    def nodetype(_) -> TokenType:
         return TokenType.name_expr
 
     def getchildren(self) -> Tuple:
@@ -114,11 +114,11 @@ class AssignmentExpression(Expression):
         self.oper = equals
         self.expr = expr
 
-    def nodetype(self) -> TokenType:
+    def nodetype(_) -> TokenType:
         return TokenType.assignment_expr
 
     def getchildren(self) -> Tuple:
-        return (self.identifier, self.equals, self.expr)
+        return (self.identifier, self.oper, self.expr)
 
 
 class BinaryExpression(Expression):
@@ -127,7 +127,7 @@ class BinaryExpression(Expression):
         self.oper = oper
         self.right = right
 
-    def nodetype(self) -> TokenType:
+    def nodetype(_) -> TokenType:
         return TokenType.bin_expr
 
     def getchildren(self) -> Tuple:
@@ -141,7 +141,7 @@ class ParenthesizedExpression(Expression):
         self.expr = expr
         self.right_paren = right_paren
 
-    def nodetype(self) -> TokenType:
+    def nodetype(_) -> TokenType:
         return TokenType.paren_expr
 
     def getchildren(self):

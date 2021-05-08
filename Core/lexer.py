@@ -20,7 +20,7 @@ class Lexer:
             return '\0'
         return self.input[pos]
 
-    def next(self):
+    def advanceIndex(self):
         # advance current input position by 1
         self.pos += 1
         
@@ -34,7 +34,7 @@ class Lexer:
             # compute the range of the identifier [alphabets only]
             strt = self.pos
             while(str.isalpha(self.current())):
-                self.next()
+                self.advanceIndex()
 
             sbstr = self.input[strt:self.pos]
             token = self.helper.getkeywordtoken(sbstr, strt)
@@ -46,7 +46,7 @@ class Lexer:
             strt = self.pos
             
             while(str.isdigit(self.current())):
-                self.next()
+                self.advanceIndex()
 
             sbstr = self.input[strt:self.pos]
             
@@ -65,7 +65,7 @@ class Lexer:
             strt = self.pos
             
             while(str.isspace(self.current())):
-                self.next()
+                self.advanceIndex()
             token = Token(TokenType.space, strt)
             return token
 
@@ -88,7 +88,7 @@ class Lexer:
                     return token
                 else:
                     token = Token(TokenType.bang, self.pos, '!')
-                    self.next()
+                    self.advanceIndex()
                     return token
             elif tokentype is TokenType.assignment:
                 if self.lookahead(1) == '=':
@@ -97,11 +97,11 @@ class Lexer:
                     return token
                 else:
                     token = Token(TokenType.assignment, self.pos, '=')
-                    self.next()
+                    self.advanceIndex()
                     return token
             else:
                 token = Token(tokentype, self.pos, self.current())
-                self.next()
+                self.advanceIndex()
                 return token
 
         elif self.helper.isparenthesis(self.current()):
@@ -109,10 +109,10 @@ class Lexer:
             cur = self.current()
             paren_type = TokenType.open_paren if cur == '(' else TokenType.closed_paren
             token = Token(paren_type, self.pos, cur)
-            self.next()
+            self.advanceIndex()
             return token
           
-        elif self.current() != '\0':
+        if self.current() != '\0':
             # this should handle all unhandled cases and returns a bad token
             self.diagnostics.reportbadcharacter(self.pos, self.current())
             token = Token(TokenType.bad_token, self.pos, self.current())

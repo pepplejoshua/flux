@@ -2,3 +2,4 @@ __pycache__
 mynotes
 .vscode
 inputs
+.DS_Store

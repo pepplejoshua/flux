@@ -4,7 +4,7 @@ from enum import Enum, auto
 class BUnaryOperatorType(Enum):
     identity = auto()
     negate = auto()
-    log_negate = auto()
+    bool_negate = auto()
 
 # bound binary operators types
 class BBinaryOperatorType(Enum):

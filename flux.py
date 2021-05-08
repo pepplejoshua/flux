@@ -17,6 +17,7 @@ def entry(flag, nline, test=False, code=False):
     res = None
     showtree = False
     history = []
+    variables = {}
     while True:
         # this helps with my CI testing
         # if there is a cmdline arg, exit after running the single line snippet, else
@@ -52,7 +53,7 @@ def entry(flag, nline, test=False, code=False):
             cprint('Flux v0.0.1', 'green')
             continue
         
-        print(line)
+        # print(line)
         if line[0:3] == ".h":
             try:
                 indx = int(line[2:])
@@ -70,7 +71,7 @@ def entry(flag, nline, test=False, code=False):
         # handle any parsing errors
         else:
             comp = Compilation(tree)
-            result = comp.evaluate({})
+            result = comp.evaluate(variables)
             diag = result.diagnostics
             res = result.value
             if diag:
@@ -80,6 +81,7 @@ def entry(flag, nline, test=False, code=False):
                 print(res)
 
         if showtree:
+            print()
             cprint('binder information..', 'yellow')
             binderinfo(result.boundExpr)
             print()
@@ -123,14 +125,29 @@ def binderinfo(expr, indent='', is_last=True):
     elif isinstance(expr, BUnaryExpression):
         out = indent + marker + expr.nodetype().name.upper()
         color = 'green'
-        cprint(out + ' [type:' + str(expr.type()) + ', operand:' + expr.sign.tokentype.name + ']', color)
+        cprint(out + ' [type:' + str(expr.type()) + ', operator:' + expr.sign.tokentype.name + ']', color)
         indent += '    ' if is_last else '│   '
         binderinfo(expr.operand, indent, True)
         return
+    elif isinstance(expr, BAssignmentExpression):
+        # constructing output 
+        out = indent + marker + expr.nodetype().name.upper()
+        color = 'magenta'
+        cprint(out + ' [type:' + str(expr.type()) + ', operator:=]', color)
+
+        indent += '    ' if is_last else '│   '
+        tokn, iExpr = expr.composition()
+        prettyprint(tokn, indent, False)
+        binderinfo(iExpr, indent)
     elif isinstance(expr, BLiteralExpression):
         out = indent + marker + expr.nodetype().name.upper()
         color = 'cyan'
         cprint(out + ' [type:' + str(expr.type()) + ', value:' + str(expr.value) + ']', color)
+        return
+    elif isinstance(expr, BVariableExpression):
+        out = indent + marker + expr.nodetype().name.upper()
+        color = 'cyan'
+        cprint(out + ' [type:' + str(expr.type()) + ', id: ' + str(expr.name) + ', val: ' + str(expr.val) + ']', color)
         return
     # set the indent for the next call
     else: return

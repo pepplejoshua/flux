@@ -1,3 +1,4 @@
+from Core.variablesym import VariableSym
 from enum import Enum, auto
 from .bbinaryoperator import BBinaryOperator
 from .bunaryoperator import BUnaryOperator
@@ -10,6 +11,7 @@ class BNodeType(Enum):
     bUnary_expr = auto()
     bBin_expr = auto()
     bVariable_expr = auto()
+    bAssignment_expr = auto()
 
 # this is the base bound expression type
 class BExpression(BoundNode): 
@@ -80,15 +82,28 @@ class BBinaryExpression(BExpression):
         return (self.left, self.oper, self.right)
 
 class BVariableExpression(BExpression):
-    def __init__(self, name, var_type: type):
-        self.name = name
-        self.typing = var_type
+    def __init__(self, varSym: VariableSym):
+        self.variable = varSym
 
     def nodetype(self) -> BNodeType:
         return BNodeType.bVariable_expr
 
     def type(self) -> type:
-        return self.typing
+        return self.variable.typing
 
     def composition(self):
-        return (self.name, self.typing)
+        return (self.variable)
+
+class BAssignmentExpression(BExpression):
+    def __init__(self, varSym: VariableSym, bExpr: BExpression):
+        self.variable = varSym
+        self.expression = bExpr
+
+    def nodetype(self) -> BNodeType:
+        return BNodeType.bAssignment_expr
+
+    def type(self) -> type:
+        return self.expression.type()
+        
+    def composition(self):
+        return (self.variable, self.expression)

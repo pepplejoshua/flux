@@ -6,13 +6,10 @@ class Compilation:
         self.tree = tree
     
     def evaluate(self, variables):
-        if self.tree.error:
-            diag = self.tree.diagnostics.information
-            return EvaluationResult(None, diag, None)
         binder = Binder(variables)
         b_expr = binder.bindexpression(self.tree.root)
 
-        diag = self.tree.diagnostics.information + binder.diagnostics.information
+        diag = binder.diagnostics.information
 
         if diag: return EvaluationResult(None, diag, None)
         eval = BExpressionEvaluator(b_expr, variables)

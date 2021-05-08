@@ -14,15 +14,18 @@ class Parser:
         self.diagnostics = DiagnosticsBag()
         token = lexer.lex()
         
-        if token.tokentype.name != 'eof':
-        # continue to tokenize input until eof is seen, the repl has received an exit command or a bad_token is read
+        if token:
+            # read token stream until end of file token is read
             while token.tokentype.name != 'eof':
-                if (token.tokentype not in [TokenType.bad_token, TokenType.space]):
-                    self.tokens.append(token)
-                elif token.tokentype is TokenType.bad_token:
-                    self.error = True
-                    break
-                token = lexer.lex()
+                    if (token.tokentype not in [TokenType.bad_token, TokenType.space]):
+                        self.tokens.append(token)
+                    elif token.tokentype is TokenType.bad_token:
+                        self.error = True
+                        break
+                    token = lexer.lex()
+        else:
+            self.error = True
+
         if self.error:
             self.diagnostics.append(lexer.diagnostics)
             return
@@ -77,7 +80,6 @@ class Parser:
     def parseassignmentexpression(self) -> Expression:
         # make sure this isn't a hacky way of doing things
         if self.lookahead(0).nodetype() == TokenType.identifier and self.lookahead(1).nodetype() == TokenType.assignment:
-            print('Found assignment..')
             identifier = self.nexttoken()
             assign = self.nexttoken()
             value = self.parseassignmentexpression()
@@ -92,6 +94,7 @@ class Parser:
     # or a lower precedence operator isn't read
     def parsebinaryexpresion(self, parentprecendece=0) -> Expression:
         left: Expression
+
         un_pre = Helper.getunaryoperatorprecedence(self.current().nodetype())
 
         # using >= vs > allows you to stack - or + as many times as you wish due to respecting precedence of the same level 
@@ -125,7 +128,7 @@ class Parser:
         # Literals are currently: BOOL and INTEGERS
         elif self.current().tokentype in (TokenType.true, TokenType.false):
             keyword = self.current()
-            val = True if self.nexttoken().tokentype == TokenType.true else False # t is t and f otherwise
+            val = True if self.nexttoken().tokentype == TokenType.true else False
             val = bool(val)
             return LiteralExpression(keyword, val) 
 

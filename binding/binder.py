@@ -5,11 +5,13 @@ from .bbinaryoperator import *
 from .bunaryoperator import *
 from Core.tokentype import TokenType
 from Core.diagnostics import DiagnosticsBag
+from Core.variablesym import VariableSym
 
 class Binder:
     def __init__(self, variables):
         self.diagnostics = DiagnosticsBag()
         self.variables = variables 
+        self.error = False
 
     # entry point for recursion, similar to parser structure
     # depending on Expression type, we bind differently
@@ -33,46 +35,86 @@ class Binder:
 
         # LITERALS 
     def bindliteralexpression(self, expr: LiteralExpression) -> BLiteralExpression:
-        if isinstance(expr.value, bool):
-            return BLiteralExpression(expr.value)
-        else:
-            try:
-                val = int(expr.value)  
-            except ValueError:
-                val = 0
-        return BLiteralExpression(val)
+            if isinstance(expr.value, bool):
+                return BLiteralExpression(expr.value)
+            else:
+                try:
+                    val = int(expr.value)  
+                except ValueError:
+                    val = 0
+            return BLiteralExpression(val)
 
         # UNARY
     def bindunaryexpression(self, expr: UnaryExpression) -> BUnaryExpression:
-        b_operand = self.bindexpression(expr.operand)
-        b_sign = BUnaryOperator.bind(expr.sign.tokentype, b_operand.type())
-        if not b_sign:
-            self.diagnostics.reportundefinedunaryoperator(expr.sign.span(), expr.sign.val, b_operand.type())
-            return b_operand
-        return BUnaryExpression(b_sign, b_operand)
+        if not self.error:
+            b_operand = self.bindexpression(expr.operand)
+            b_sign = BUnaryOperator.bind(expr.sign.tokentype, b_operand.type())
+            if not b_sign:
+                self.diagnostics.reportundefinedunaryoperator(expr.sign.span(), expr.sign.val, b_operand.type())
+                self.error = True
+                return b_operand
+            return BUnaryExpression(b_sign, b_operand)
 
         # BINARY
     def bindbinaryexpression(self, expr: BinaryExpression) -> BBinaryExpression:
-        b_left = self.bindexpression(expr.left) 
-        b_right = self.bindexpression(expr.right)
-        b_sign = BBinaryOperator.bind(expr.oper.tokentype, b_left.type(), b_right.type())
-        if not b_sign: 
-            self.diagnostics.reportundefinedbinaryoperator(expr.oper.span(), expr.oper.val, b_left.type(), b_right.type())
-            return b_left
-        return BBinaryExpression(b_left, b_sign, b_right)
+        if not self.error:
+            b_left = self.bindexpression(expr.left) 
+            b_right = self.bindexpression(expr.right)
+            
+            b_sign = BBinaryOperator.bind(expr.oper.tokentype, b_left.type(), b_right.type())
+            if not b_sign: 
+                self.diagnostics.reportundefinedbinaryoperator(expr.oper.span(), expr.oper.val, b_left.type(), b_right.type())
+                self.error = True
+                return b_left
+            return BBinaryExpression(b_left, b_sign, b_right)
 
     def bindparenthesizedexpression(self, expr: ParenthesizedExpression) -> BExpression:
-        return self.bindexpression(expr.expr)
+        if not self.error:
+            return self.bindexpression(expr.expr)
+
+    def boundvariableslookup(self, varStr: str) -> VariableSym:
+        if not self.error:
+            var = None
+            for vSym in self.variables:
+                if vSym.name == varStr:
+                    var = vSym
+                    break
+            return var
 
     def bindnameexpression(self, expr: NameExpression) -> BExpression:
-        name = expr.identifier.val
-
-        if name not in self.variables:
-            self.diagnostics.reportundefinedname(expr.identifier.span(), name)
-            return BLiteralExpression(0)
-
-        var_type = type(self.variables[name]) if type(self.variables[name]) else object 
-        return BVariableExpression(name, var_type)
+        if not self.error:
+            name = expr.identifier.val
+            var = self.boundvariableslookup(name)
+            if not var:
+                self.diagnostics.reportundefinedname(expr.identifier.span(), name)
+                self.error = True
+                # undefined variables currently always return a 0 literal
+                return BLiteralExpression(0)
+            
+            # ############################################# #
+            return BVariableExpression(var)
 
     def bindassignmentexpression(self, expr: AssignmentExpression) -> BExpression:
-        pass
+        name = expr.identifier.val
+        bExpr = self.bindexpression(expr.expr)
+        
+        if not self.error:
+            var = self.boundvariableslookup(name)
+            if not var:
+                defaultV = None
+                # this creates a default binding in the variables dict before
+                # initialization is done by the evaluator
+                # in the case where the variable exists though, we end up overwriting it,
+                # so I introduced the wrapping if statement to detect already existing variables
+                if (bExpr.type() == int):
+                    defaultV = 0
+                elif (bExpr.type() == bool):
+                    defaultV = False
+
+                if defaultV == None:
+                    raise Exception(f"Unsupported variable type: {bExpr.type()}")
+                varSym = VariableSym(name, bExpr.type())
+                self.variables[varSym] = defaultV
+                return BAssignmentExpression(varSym, bExpr)
+            return BAssignmentExpression(var, bExpr)
+        
