@@ -37,21 +37,15 @@ def tokens():
         (TokenType.assignment, '='),
         
         (TokenType.pipe, '||'),
+        (TokenType.pipe, 'or'),
         (TokenType.ampersand, '&&'),
+        (TokenType.ampersand, 'and'),
         (TokenType.bang, '!'),
+        (TokenType.bang, 'not'),
 
         (TokenType.notequal, '!='),
         (TokenType.equal, '=='),
     ]
-    return toks
-
-@pytest.fixture(scope=sc)
-def tokenPairs(tokens):
-    toks = []
-    for t1 in tokens:
-        for t2 in tokens:
-            if not requireSeparator(t1[0], t2[0]):
-                toks.append((t1[0], t1[1], t2[0], t2[1]))
     return toks
 
 @pytest.fixture(scope=sc)
@@ -67,6 +61,26 @@ def spaceTokens():
     ]
     return toks
 
+@pytest.fixture(scope=sc)
+def tokenPairs(tokens):
+    toks = []
+    for t1 in tokens:
+        for t2 in tokens:
+            if not requireSeparator(t1[0], t2[0]):
+                toks.append((t1[0], t1[1], t2[0], t2[1]))
+    return toks
+
+@pytest.fixture(scope=sc)
+def tokenPairsWithSpaces(tokens, spaceTokens):
+    toks = []
+    for t1 in tokens:
+        for t2 in tokens:
+            if requireSeparator(t1[0], t2[0]):
+                for sp in spaceTokens:
+                    toks.append((t1[0], t1[1], sp[0], sp[1], t2[0], t2[1]))
+    return toks
+
+# helper func to identify token pairs requiring spaces
 def requireSeparator(a: TokenType, b: TokenType) -> bool:
     if (a == TokenType.identifier and b == TokenType.identifier):
         return True
