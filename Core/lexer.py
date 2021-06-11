@@ -72,7 +72,8 @@ class Lexer:
             return token
 
         elif self.helper.isoperator(self.current()):
-            # checking for operators
+            # checking for operators, with eager consumption
+            # so inputing "===" will give "==" and "="
             tokentype = self.helper.getoperatortokentype(self.current())
             if tokentype in (TokenType.ampersand, TokenType.pipe):
                 if self.lookahead(1) == '|':

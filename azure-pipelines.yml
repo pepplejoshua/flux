@@ -91,3 +91,8 @@ steps:
 - script: |
     pytest -s --etype='bool' --exp='True' --ln='(true || false) or (false && true) || (not false) or (!true)'
   displayName: 'Word and symbol boolean comparators expression'
+
+- script: |
+    cd ./testing/
+    pytest -sv
+  displayName: 'Parameterized tests for individual pieces'

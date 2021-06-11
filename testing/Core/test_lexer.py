@@ -1,7 +1,17 @@
-from .fixtures import lexer, tokens, tokenPairs, spaceTokens
+from .fixtures import lexer, tokens, tokenPairs, spaceTokens, tokenPairsWithSpaces
 from Core import TokenType, Token, tokentype
 
-c = 0
+runTestsCounter = 0
+
+def assertEOF(t: Token):
+    assertEQTokenTypes(t, TokenType.eof)
+
+def assertEQTokenTypes(t1: Token, tt: TokenType):
+    assert t1.tokentype == tt
+
+def assertEQLines(t1: Token, line: str):
+    assert str(t1.val) == line
+
 
 # called by testTokens to verify inputs with single tokens are tokenized
 # properly
@@ -17,16 +27,19 @@ def testSingleTokens(lexer, tokens, spaceTokens):
         assertEOF(end)
 
         # check for equal token types
-        assetEQTokenTypes(tok, tokType)
+        assertEQTokenTypes(tok, tokType)
         # check for equal token values
         assertEQLines(tok, tokLine)
     # this allows me to append in the space tokens 
     # so other tokens can be reused later in pair testing
     tks = tokens + spaceTokens
-    global c
+    global runTestsCounter 
+    tCounter = 0
     for tt, txt in tks:
         inner(tt, txt)
-        c += 1
+        tCounter += 1
+    print('\n', tCounter, "tests completed")
+    runTestsCounter += tCounter
 
 def testPairedTokens(lexer, tokenPairs):
     def inner(ttype1: TokenType, tLine1: str, ttype2: TokenType, tLine2: str):
@@ -44,25 +57,47 @@ def testPairedTokens(lexer, tokenPairs):
 
         # make sure the token types generated are as expected
         # and their matching code strings are equal
-        assetEQTokenTypes(tok1, ttype1)
+        assertEQTokenTypes(tok1, ttype1)
         assertEQLines(tok1, tLine1)
-        assetEQTokenTypes(tok2, ttype2)
+        assertEQTokenTypes(tok2, ttype2)
         assertEQLines(tok2, tLine2)
 
-    global c
-    for tt1, txt1, tt2, txt2 in tokenPairs:
-        inner(tt1, txt1, tt2, txt2)
-        c += 1
+    global runTestsCounter
+    tCounter = 0
+    for bundle in tokenPairs:
+        inner(*bundle)
+        tCounter += 1
+    print('\n', tCounter, "tests completed")
+    runTestsCounter += tCounter
 
-def assertEOF(t: Token):
-    assetEQTokenTypes(t, TokenType.eof)
+def testPairedTokensWithSeparators(lexer, tokenPairsWithSpaces):
+    def inner(ttype1: TokenType, lne1: str, separatorTtype: TokenType, sepText: str, ttype2: TokenType, lne2: str):
+        txt = lne1+sepText+lne2
+        toks = lexer(txt)
 
-def assetEQTokenTypes(t1: Token, tt: TokenType):
-    assert t1.tokentype == tt
+        assert 4 == len(toks)
 
-def assertEQLines(t1: Token, line: str):
-    assert str(t1.val) == line
+        tok1 = toks[0]
+        tok2 = toks[1]
+        tok3 = toks[2]
+        end = toks[3]
+        assertEOF(end)
+        assertEQTokenTypes(tok1, ttype1)
+        assertEQLines(tok1, lne1)
+        assertEQTokenTypes(tok2, separatorTtype)
+        assertEQLines(tok2, sepText)
+        assertEQTokenTypes(tok3, ttype2)
+        assertEQLines(tok3, lne2)
+
+    global runTestsCounter
+    tCounter = 0
+    for bundle in tokenPairsWithSpaces:
+        inner(*bundle)
+        tCounter += 1
+    print('\n', tCounter, "tests completed")
+    runTestsCounter += tCounter
+
 
 def testShowTestCount():
-    global c
-    print('\n', c, "tests completed")
+    global runTestsCounter
+    print('\n', runTestsCounter, "tests completed")
