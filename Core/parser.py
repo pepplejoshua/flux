@@ -3,7 +3,7 @@ from .helper import Helper
 from .expression import *
 from Core.diagnostics import DiagnosticsBag
 
-# a recursive descent parser (idk what that means atm)
+# a recursive descent parser
 class Parser: 
     def __init__(self, input: str):
         self.exit = False
@@ -88,7 +88,7 @@ class Parser:
         return self.parsebinaryexpresion()
 
     # this parses the tree by assuming:
-    # token 1 & 3 = operand
+    # token 1 & 3 are the operands
     # token 2 is sent to a function to determine its precedence and perform 
     # a continuous forward look provided a non operator isn't read 
     # or a lower precedence operator isn't read

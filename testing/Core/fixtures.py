@@ -1,8 +1,13 @@
 import pytest
-from Core import SyntaxTree, TokenType, Helper
+from Core import SyntaxTree, TokenType, Helper, Token
 
 sc = "module"
 
+# ======================================================
+#
+#    LEXER SET UP STUFF
+#
+# ======================================================
 # defines a lexer fixture that returns a function
 # that does the actual lexing work. Used for redirecting "line"
 @pytest.fixture(scope=sc)
@@ -80,7 +85,26 @@ def tokenPairsWithSpaces(tokens, spaceTokens):
                     toks.append((t1[0], t1[1], sp[0], sp[1], t2[0], t2[1]))
     return toks
 
-# helper func to identify token pairs requiring spaces
+# ======================================================
+#
+#    HELPER SET UP STUFF
+#
+# ======================================================
+@pytest.fixture(scope=sc)
+def tokenTypeEnumItems():
+    ttEnumItems = []
+    for tt in TokenType:
+        ttEnumItems.append(tt)
+    return ttEnumItems
+
+
+
+
+# ======================================================
+#
+#    helpers for performing testing
+#
+# ======================================================
 def requireSeparator(a: TokenType, b: TokenType) -> bool:
     if (a == TokenType.identifier and b == TokenType.identifier):
         return True
@@ -112,7 +136,18 @@ def requireSeparator(a: TokenType, b: TokenType) -> bool:
     if (a == TokenType.assignment and b == TokenType.equal):
         return True    
     if (a == TokenType.equal and b == TokenType.equal):
-        return True    
-
-    
+        return True   
     return False
+
+def assertEOF(t: Token):
+    assertTokenTypesEq(t, TokenType.eof)
+
+def assertTokenTypesEq(t1: Token, tt: TokenType):
+    assert t1.tokentype == tt
+
+def assertTextEq(t1: Token, line: str):
+    assert str(t1.val) == line
+
+def assertNumberEq(a, b):
+    assert a == b
+

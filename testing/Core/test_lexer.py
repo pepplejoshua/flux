@@ -1,17 +1,8 @@
-from .fixtures import lexer, tokens, tokenPairs, spaceTokens, tokenPairsWithSpaces
+from .fixtures import lexer, tokens, tokenPairs, spaceTokens, \
+    tokenPairsWithSpaces, assertEOF, assertTokenTypesEq, assertTextEq, assertNumberEq
 from Core import TokenType, Token, tokentype
 
 runTestsCounter = 0
-
-def assertEOF(t: Token):
-    assertEQTokenTypes(t, TokenType.eof)
-
-def assertEQTokenTypes(t1: Token, tt: TokenType):
-    assert t1.tokentype == tt
-
-def assertEQLines(t1: Token, line: str):
-    assert str(t1.val) == line
-
 
 # called by testTokens to verify inputs with single tokens are tokenized
 # properly
@@ -21,15 +12,15 @@ def testSingleTokens(lexer, tokens, spaceTokens):
 
         # since it's a single tokenizable item in tokLine ,
         # toks should be of length 2 (including eof token)
-        assert 2 == len(toks)
+        assertNumberEq(2, len(toks))
         tok = toks[0]
         end = toks[1]
         assertEOF(end)
 
         # check for equal token types
-        assertEQTokenTypes(tok, tokType)
+        assertTokenTypesEq(tok, tokType)
         # check for equal token values
-        assertEQLines(tok, tokLine)
+        assertTextEq(tok, tokLine)
     # this allows me to append in the space tokens 
     # so other tokens can be reused later in pair testing
     tks = tokens + spaceTokens
@@ -48,8 +39,7 @@ def testPairedTokens(lexer, tokenPairs):
 
         # since there are 2 tokenizable items in txt,
         # toks should be of length 3 (including eof token)
-        assert 3 == len(toks)
-
+        assertNumberEq(3, len(toks))
         tok1 = toks[0]
         tok2 = toks[1]
         end = toks[2]
@@ -57,10 +47,10 @@ def testPairedTokens(lexer, tokenPairs):
 
         # make sure the token types generated are as expected
         # and their matching code strings are equal
-        assertEQTokenTypes(tok1, ttype1)
-        assertEQLines(tok1, tLine1)
-        assertEQTokenTypes(tok2, ttype2)
-        assertEQLines(tok2, tLine2)
+        assertTokenTypesEq(tok1, ttype1)
+        assertTextEq(tok1, tLine1)
+        assertTokenTypesEq(tok2, ttype2)
+        assertTextEq(tok2, tLine2)
 
     global runTestsCounter
     tCounter = 0
@@ -75,19 +65,18 @@ def testPairedTokensWithSeparators(lexer, tokenPairsWithSpaces):
         txt = lne1+sepText+lne2
         toks = lexer(txt)
 
-        assert 4 == len(toks)
-
+        assertNumberEq(4, len(toks))
         tok1 = toks[0]
         tok2 = toks[1]
         tok3 = toks[2]
         end = toks[3]
         assertEOF(end)
-        assertEQTokenTypes(tok1, ttype1)
-        assertEQLines(tok1, lne1)
-        assertEQTokenTypes(tok2, separatorTtype)
-        assertEQLines(tok2, sepText)
-        assertEQTokenTypes(tok3, ttype2)
-        assertEQLines(tok3, lne2)
+        assertTokenTypesEq(tok1, ttype1)
+        assertTextEq(tok1, lne1)
+        assertTokenTypesEq(tok2, separatorTtype)
+        assertTextEq(tok2, sepText)
+        assertTokenTypesEq(tok3, ttype2)
+        assertTextEq(tok3, lne2)
 
     global runTestsCounter
     tCounter = 0
@@ -100,4 +89,4 @@ def testPairedTokensWithSeparators(lexer, tokenPairsWithSpaces):
 
 def testShowTestCount():
     global runTestsCounter
-    print('\n', runTestsCounter, "tests completed")
+    print('\n', runTestsCounter, "tests completed in", __file__)

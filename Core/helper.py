@@ -13,6 +13,23 @@ class Helper:
                 '&': TokenType.ampersand, 
                 '!': TokenType.bang}
 
+    reserved = { TokenType.plus: '+',
+                TokenType.minus: '-',
+                TokenType.multiply: '*', 
+                TokenType.divide: '/', 
+                TokenType.assignment: '=',
+                TokenType.equal: '==',
+                TokenType.modulo: '%',
+                TokenType.exponent: '^',
+                TokenType.pipe: ('||', 'or'),
+                TokenType.ampersand: ('&&', 'and'),
+                TokenType.bang: '!',
+                TokenType.notequal: '!=',
+                TokenType.open_paren: '(',
+                TokenType.closed_paren: ')',
+                TokenType.true: 'true',
+                TokenType.false: 'false', }
+
     keywords = {'true': TokenType.true,
     'false': TokenType.false,
     'not': TokenType.bang,
@@ -48,6 +65,11 @@ class Helper:
             return Token(token_type, pos, val)
         else: return Token(TokenType.identifier, pos, val)
     
+    def getreservedwordtext(self, val: TokenType):
+        if val in self.reserved:
+            return self.reserved[val]
+        return None
+
     # get operator precedence of binary operator token else return 
     @staticmethod
     def getunaryoperatorprecedence(tokentype: TokenType) -> int:
