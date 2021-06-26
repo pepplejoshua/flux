@@ -1,13 +1,13 @@
 from .fixtures import tokenTypeEnumItems, lexer, \
     assertNumberEq, assertEOF, assertTextEq, assertTokenTypesEq
-from Core import TokenType, Helper
+from Core import TokenType, TokenTypeHelper
 
 runTestsCounter = 0
 
 # helpers
 def testReservedWordText(tokenTypeEnumItems, lexer):
     def inner(tt: TokenType):
-        text = Helper().getreservedwordtext(tt)
+        text = TokenTypeHelper().getreservedwordtext(tt)
         # for things like expression types, eof and spaces, as we only want reserved words and characters 
         if not text: 
             return

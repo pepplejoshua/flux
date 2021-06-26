@@ -1,5 +1,5 @@
 import pytest
-from Core import SyntaxTree, TokenType, Helper, Token
+from Core import SyntaxTree, TokenType, TokenTypeHelper, Token
 
 sc = "module"
 
@@ -109,8 +109,8 @@ def requireSeparator(a: TokenType, b: TokenType) -> bool:
     if (a == TokenType.identifier and b == TokenType.identifier):
         return True
     
-    aIsKeyword = Helper().isKeywordTokenType(a)
-    bIsKeyword = Helper().isKeywordTokenType(b)
+    aIsKeyword = TokenTypeHelper().isKeywordTokenType(a)
+    bIsKeyword = TokenTypeHelper().isKeywordTokenType(b)
     if (aIsKeyword and bIsKeyword):
         return True
     if (aIsKeyword and b == TokenType.identifier):

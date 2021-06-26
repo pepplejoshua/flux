@@ -1,5 +1,5 @@
 from .lexer import Lexer
-from .helper import Helper
+from .helper import TokenTypeHelper
 from .expression import *
 from Core.diagnostics import DiagnosticsBag
 
@@ -95,7 +95,7 @@ class Parser:
     def parsebinaryexpresion(self, parentprecendece=0) -> Expression:
         left: Expression
 
-        un_pre = Helper.getunaryoperatorprecedence(self.current().nodetype())
+        un_pre = TokenTypeHelper.getunaryoperatorprecedence(self.current().nodetype())
 
         # using >= vs > allows you to stack - or + as many times as you wish due to respecting precedence of the same level 
         # --1 would be read as un_op - un_op - literal - number (correctly when using >= since 2 -s appear together)
@@ -108,7 +108,7 @@ class Parser:
             left = self.parseprimaryexpression()
         # you can choose to handle post-fix cases in between unary ops and regular ops
         while not self.error:
-            precedence = Helper.getbinaryoperatorprecedence(self.current().nodetype())
+            precedence = TokenTypeHelper.getbinaryoperatorprecedence(self.current().nodetype())
             if precedence == 0 or precedence <= parentprecendece:
                 break
             operator = self.nexttoken()

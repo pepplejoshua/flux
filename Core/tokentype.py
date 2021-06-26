@@ -22,10 +22,13 @@ class TokenType(Enum):
     divide = auto()
     exponent = auto()
     assignment = auto()
-    # bool operators
     pipe = auto()
     ampersand = auto()
     bang = auto()
+    # bool operators
+    log_or = auto()
+    log_and = auto()
+    log_not = auto()
     #complex operators
     notequal = auto() # bang + assignment
     equal = auto() # assignment + assignment

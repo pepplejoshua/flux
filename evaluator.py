@@ -28,7 +28,7 @@ class BExpressionEvaluator:
                 return int(oper)
             elif sign.operatortype == BUnaryOperatorType.negate:
                 return -int(oper)
-            elif sign.operatortype == BUnaryOperatorType.bool_negate:
+            elif sign.operatortype == BUnaryOperatorType.log_not:
                 return not bool(oper)
             else: raise Exception(f'Unknown unary operator <{root.sign.operatortype.name}>')
 

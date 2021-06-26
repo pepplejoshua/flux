@@ -1,5 +1,5 @@
 from Core.tokens import * # contains Token, TokenType
-from .helper import Helper
+from .helper import TokenTypeHelper
 from Core.textspan import TextSpan
 from Core.diagnostics import DiagnosticsBag
 
@@ -7,7 +7,7 @@ class Lexer:
     def __init__(self, input: str):
         self.input = input
         self.pos = 0
-        self.helper = Helper()
+        self.helper = TokenTypeHelper()
         self.diagnostics = DiagnosticsBag()
     
     def current(self) -> chr:
@@ -76,12 +76,12 @@ class Lexer:
             # so inputing "===" will give "==" and "="
             tokentype = self.helper.getoperatortokentype(self.current())
             if tokentype in (TokenType.ampersand, TokenType.pipe):
-                if self.lookahead(1) == '|':
-                    token = Token(tokentype, self.pos, '||')
+                if self.lookahead(1) == '|' and tokentype == TokenType.pipe:
+                    token = Token(TokenType.log_or, self.pos, '||')
                     self.pos += 2
                     return token
-                elif self.lookahead(1) == '&':
-                    token = Token(tokentype, self.pos, '&&')
+                elif self.lookahead(1) == '&' and tokentype == TokenType.ampersand:
+                    token = Token(TokenType.log_and, self.pos, '&&')
                     self.pos += 2
                     return token
             elif tokentype is TokenType.bang:
@@ -90,7 +90,7 @@ class Lexer:
                     self.pos += 2
                     return token
                 else:
-                    token = Token(TokenType.bang, self.pos, '!')
+                    token = Token(TokenType.log_not, self.pos, '!')
                     self.advanceIndex()
                     return token
             elif tokentype is TokenType.assignment:

@@ -1,6 +1,6 @@
 from .fixtures import lexer, tokens, tokenPairs, spaceTokens, \
     tokenPairsWithSpaces, assertEOF, assertTokenTypesEq, assertTextEq, assertNumberEq
-from Core import TokenType, Token, tokentype
+from Core import TokenType, Token
 
 runTestsCounter = 0
 

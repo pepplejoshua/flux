@@ -36,7 +36,8 @@ class SyntaxTree:
         while True:
             tok = lexer.lex()
             toks.append(tok)
-            if tok.tokentype == TokenType.eof:
+            # hoping to catch bad tokens as well
+            if tok.tokentype in (TokenType.eof, TokenType.bad_token):
                 break
         return toks
 

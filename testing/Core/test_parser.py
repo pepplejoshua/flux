@@ -1,4 +1,4 @@
-from Core import TokenType, Helper 
+from Core import TokenType, TokenTypeHelper 
 runTestsCounter = 0
 
 def testBinaryExpressionHonorsPrecedences():

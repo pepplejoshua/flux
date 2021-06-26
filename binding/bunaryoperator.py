@@ -12,7 +12,7 @@ class BUnaryOperator:
 
     @staticmethod
     def bind(ttype: TokenType, op_type: type):
-        operators = [BUnaryOperator(TokenType.bang, BUnaryOperatorType.bool_negate, bool), 
+        operators = [BUnaryOperator(TokenType.log_not, BUnaryOperatorType.log_not, bool), 
                         BUnaryOperator(TokenType.plus, BUnaryOperatorType.identity, int),
                         BUnaryOperator(TokenType.minus, BUnaryOperatorType.negate, int)]
         for i in operators:
