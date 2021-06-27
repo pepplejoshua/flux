@@ -1,6 +1,6 @@
 from Core.tokens import *
 from evaluator import *
-from os import name, system
+from os import system, name
 from binding.binder import *
 from binding.boundexpression import *
 import sys 

@@ -41,12 +41,12 @@ def tokens():
         (TokenType.exponent, '^'),
         (TokenType.assignment, '='),
         
-        (TokenType.pipe, '||'),
-        (TokenType.pipe, 'or'),
-        (TokenType.ampersand, '&&'),
-        (TokenType.ampersand, 'and'),
-        (TokenType.bang, '!'),
-        (TokenType.bang, 'not'),
+        (TokenType.log_or, '||'),
+        (TokenType.log_or, 'or'),
+        (TokenType.log_and, '&&'),
+        (TokenType.log_and, 'and'),
+        (TokenType.log_not, '!'),
+        (TokenType.log_not, 'not'),
 
         (TokenType.notequal, '!='),
         (TokenType.equal, '=='),
@@ -123,9 +123,9 @@ def requireSeparator(a: TokenType, b: TokenType) -> bool:
         return True
     
 
-    if (a == TokenType.bang and b == TokenType.assignment):
+    if (a == TokenType.log_not and b == TokenType.assignment):
         return True 
-    if (a == TokenType.bang and b == TokenType.equal):
+    if (a == TokenType.log_not and b == TokenType.equal):
         return True    
 
 
